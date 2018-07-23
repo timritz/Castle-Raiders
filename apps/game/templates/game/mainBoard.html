@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>"Game Name"</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+
+
+
+    <style>
+        *{
+            /* outline: 1px dotted red; */
+            font-family: MedievalSharp;
+        }
+
+        body{
+            background-color: #6c2505;
+            background-size: 40px 160px, 60px 29px, 27px 27px;
+            background-image: linear-gradient(90deg, #551c07 50%, transparent 50%),
+                linear-gradient(94deg, rgba(91,33,5,.1) 0%,rgba(83,29,4,0.32) 23%,rgba(74,24,3,.41) 47%,rgba(80,27,5,0.44) 70%,rgba(81,27,5,0.59) 74%,rgba(93,33,4,0.2) 83%,rgba(115,43,3,.5) 100%),
+                linear-gradient(90deg, #541c09 50%, transparent 50%),
+                linear-gradient(90deg, #7a2e00 50%, #632401 50%);
+
+        }
+
+        h1 {
+            font-family: MedievalSharp;
+            font-size: 24px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 500;
+            line-height: 26.4px;
+        }
+        h3 {
+            font-family: MedievalSharp;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 500;
+            line-height: 15.4px;
+        }
+        p {
+            font-family: MedievalSharp;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        main{
+            /* background-color: #797746; */
+            padding: 20px 0px;
+            width:100%;
+        }
+        .playerStats{
+            display: inline-block;
+            width: 20%;
+            height: auto;
+            background-color: #959490;
+            vertical-align: top;
+            border-radius: 5px;
+            box-shadow: 2px 2px 2px black;
+        }
+
+        /* .personalPlayerStats{
+            display: inline-block;
+            width: 25%;
+            height: auto;
+            background-color: grey;
+            vertical-align: top;
+        } */
+        .middle{
+            display: inline-block;
+            width: 49%;
+            background-size: contain;
+            vertical-align: top;
+ 
+        }
+        .board{
+            width:75%;
+            border: 5px outset;
+            border-radius: 5px;
+        }
+        .cardHand{
+            width: 99%;
+            margin: auto;
+            height: 200px;
+            padding: 10px 0px;
+        }
+        .card{
+            width:30%;
+            height:100px;
+            text-align: center;   
+            display: inline-block;
+            background-color:  rgba(139,69,19,.8);    
+        }
+    </style>
+
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand">Link List</a>
+
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button> -->
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!-- <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li> -->
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/how_to_play" target="_blank" >How To Play</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/characters" target="_blank" >Character Wiki</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/enemies" target="_blank">Enemy Wiki</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/items" target="_blank">Item Wiki</a>
+                </li>
+    
+
+
+
+                <!-- <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li> -->
+
+                <!-- <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Disabled</a>
+                </li> -->
+            </ul>
+        </div>
+    </nav>
+
+    <main role="main" class="container-fluid">
+        <div class="container playerStats">
+            <h2>All Player Stats</h2>
+                <ul>
+                    <li>TempName {{name}} - TempCharacter{{character}}</li>
+                        <ul><li>Health - 4</li></ul>
+                    <li>Timmy Toe - Knight</li>
+                        <ul><li>Health - 4</li></ul>
+                    <li>Kimmy Koe - Cleric</li> 
+                        <ul><li>Health - 4</li></ul>
+                    <li>John  Doe - Mage</li>
+                        <ul><li>Health - 4</li></ul>
+
+                    {{characterList | safe}}
+
+                </ul>
+        </div>
+
+
+        <div class='middle'>
+            <img src='static/game/img/exampleMap.jpg' alt="Main Board" class = 'board'>
+
+        </div>
+        
+
+        <div class="container playerStats">
+            <h2>Personal Player Stats</h2>
+            <li>Health - {{characterHealth}}</li>
+            <li>Energy Level - {{characterEnergy}}</li>
+            <li>Status - {{characterStatus}}</li> 
+            <li>Items:</li>
+            <ul>
+                {{characterItems | safe}}
+            </ul>
+
+            <div class="container cardHnd">
+                <div class="card"><h1>7</h1></div>
+                <div class="card"><h1>7</h1></div>
+                <div class="card"><h1>7</h1></div>
+
+                {{characterCards | safe}}
+
+            </div>
+        </div>
+
+
+
+    </main><!-- /.container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>"Game Name" Sign in</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+
+    <style>
+      *{
+        font-family: MedievalSharp;
+        /* outline: 1px solid red; */
+      }
+      .flashes{
+          color: red;
+          text-align: center;
+      }
+      button{
+          margin-top: 10px;
+      }
+      p{
+        min-width:10%;
+        display: inline-block;
+        vertical-align: top;
+        text-align: center;
+        line-height: 36px;
+        font-weight: bold;
+        text-shadow: -1px -1px 0 black,
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black;
+        font-size: large;
+      }
+
+      h1{
+        text-shadow: -1px -1px 0 black,
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black;
+      }
+
+      .form-control{
+        width: 50%;
+        display: inline-block;
+        vertical-align: top;
+        border-color: none;
+      }
+
+      .form-control:focus{
+        border:none;
+      }
+
+      #myVideo {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%; 
+        min-height: 100%;
+      }
+
+      form{
+        position: fixed;
+        top: 25%;
+        left: 25%;
+        /* background: rgba(0, 0, 0, 0.5); */
+        color: #f1f1f1;
+        width: 50%;
+        padding: 20px;
+      }
+
+      .btn{
+        width: 25%;
+        margin: auto;
+        background-color:	rgba(139,69,19,.85);
+        border: none;
+      }
+
+      .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
+        background-color:	rgb(139,69,19)
+      }
+
+    </style>
+
+
+  </head>
+
+  <body class="text-center">
+
+
+    
+    <video loop muted autoplay id="myVideo">
+        <source src="/static/login/img/iceland_cave.mp4" type="video/mp4">
+    </video>
+  
+
+    <form class="form-signin" action="/processIndex" method="POST">
+      {% csrf_token %}
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+      <p>Username:</p>
+      <input type="text" name="inputName" class="form-control" placeholder="ex. John Doe" required autofocus><br>
+
+      <div class="form-group select">
+        <p>Status:</p>
+        <select class="form-control" name="user_type" required>
+          <option value='player' selected>Player</option>
+          <option value='spectator'>Spectator</option>
+          <option value='admin'>Admin</option>
+        </select>
+      </div>
+      
+      <p>Password:</p>
+      <input type="password" name="password" class="form-control" placeholder="required only for admin access">
+
+
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Go to Game</button>
+
+    </form>
+  </body>
+</html>

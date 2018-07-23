@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+    {% load static %}
+    <title>"Game Name" Team Selection</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="jumbotron.css" rel="stylesheet">
+
+    <style>
+        *{
+            /* outline: 1px dotted red; */
+        }
+        .jumbotron{
+            display: inline-block;
+            min-width: 20%;
+            padding: 3% 1%;
+            overflow:inherit;
+        }
+        .main{
+            display: inline-block;
+            width: 75%;
+            vertical-align: top;
+            
+        }
+        .col-md-4{
+            display: block;
+            max-width: 100%;
+        }
+        .display-3{
+            width: 100%;
+            text-align: center;
+        }
+        body{
+            padding: 2%;
+            background-image: url("{% static 'login/img/forest1.jpg' %}");
+            background-repeat:no-repeat;
+            background-size: 100% 250%;
+            margin: 0px 0px;
+        }
+        .character_select{
+            color: whitesmoke;
+            text-shadow: -1px -1px  black,
+            -1px 1px  black,
+            1px -1px  black,
+            1px 1px  black;
+
+        }
+
+        .col-sm-10 {
+            -ms-flex: 0 0 83.333333%;
+            flex: 0 0 83.333333%;
+            max-width: none;
+        }
+
+    </style>
+
+  </head>
+
+  <body>
+    <main role="main">
+        <form action="/game" method="post">
+            {% csrf_token %}
+
+            <div class="jumbotron">
+                <div class="container">
+                    <h1 class="display-3">Team </h1>
+
+                    {% for player in players %}
+                        <ul>
+                            {{player}}
+                            <ul><li> test {{player.character}}</li></ul>
+                        </ul>
+
+                    {% endfor %}
+
+
+                    <!-- <p>Player 1</p>
+                    <p>Player 2</p>
+                    <p>Player 3</p>
+                    <p>Player 4</p> -->
+                    <p><a class="btn btn-primary btn-lg" href="http://127.0.0.1:8000/game" role="button">Start Game &raquo;</a></p>
+                    <!-- <button type="submit" class="btn btn-primary">Start Game &raquo;</button> -->
+
+                </div>
+            </div>
+
+            <div class="container main">
+                <!-- <div class="col-md-4">
+                    <h2>Character 1</h2>
+                    <p> Character description </p>
+                    <p><a class="btn btn-secondary" href="#" role="button">Select to Play &raquo;</a></p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Character 2</h2>
+                    <p> Character description </p>
+                    <p><a class="btn btn-secondary" href="#" role="button">Select to Play &raquo;</a></p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Character 3</h2>
+                    <p> Character description </p>
+                    <p><a class="btn btn-secondary" href="#" role="button">Select to Play &raquo;</a></p>
+                </div>
+                <div class="col-md-4">
+                    <h2>Character 4</h2>
+                    <p> Character description </p>
+                    <p><a class="btn btn-secondary" href="#" role="button">Select to Play &raquo;</a></p>
+                </div> -->
+
+                <fieldset class="form-group character_select">
+                    <div class="col-sm-10">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="characterChoice" id="gridRadios1" value="Knight" checked>
+                            <label class="form-check-label" for="gridRadios1">
+                                <h2>Knight</h2>
+                                <p>A heavily defended and physically powerful fighter, who is slow moving but deals and takes attacks well. </p>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="characterChoice" id="gridRadios2" value="Mage">
+                            <label class="form-check-label" for="gridRadios2">
+                                <h2>Mage</h2>
+                                <p>A powerful fighter who can attack from range using magical spells, but suceptible to attacks when fighinting at close range.</p>
+                            </label>
+                        </div>
+                        <div class="form-check disabled">
+                            <input class="form-check-input" type="radio" name="characterChoice" id="gridRadios3" value="Rogue">
+                            <label class="form-check-label" for="gridRadios3">
+                                <h2>Rogue</h2>
+                                <p>A powerful fighter who excels at map mobility and one on one combat, but can be overwhelmed by fighting multiple foes at once.</p>
+                            </label>
+                        </div>
+                        <div class="form-check disabled">
+                            <input class="form-check-input" type="radio" name="characterChoice" id="gridRadios4" value="Bard">
+                            <label class="form-check-label" for="gridRadios4">
+                                    <h2>Bard</h2>
+                                    <p>A weaker fighter who excels defensively and can charm enemies into submission by playing songs from a magical harp.</p>
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div> <!-- /container -->
+        </form>
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
