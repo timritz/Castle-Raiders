@@ -106,6 +106,9 @@
             display: inline-block;
             background-color:  rgba(139,69,19,.8);    
         }
+        .temp{
+            color: white;
+        }
     </style>
 
   </head>
@@ -163,23 +166,33 @@
     <main role="main" class="container-fluid">
         <div class="container playerStats">
             <h2>All Player Stats</h2>
-                <ul>
-                    <li>TempName {{name}} - TempCharacter{{character}}</li>
-                        <ul><li>Health - 4</li></ul>
-                    <li>Timmy Toe - Knight</li>
-                        <ul><li>Health - 4</li></ul>
-                    <li>Kimmy Koe - Cleric</li> 
-                        <ul><li>Health - 4</li></ul>
-                    <li>John  Doe - Mage</li>
-                        <ul><li>Health - 4</li></ul>
+            
 
-                    {{characterList | safe}}
+            <!-- <p>{{request.session.values}}</p> -->
+            <!-- <ul>
+                <li>{{name}} - TempCharacter</li>
+                    <ul><li>Health - 4</li></ul>
+                <li>Timmy Toe - Knight</li>
+                    <ul><li>Health - 4</li></ul>
+                <li>Kimmy Koe - Cleric</li> 
+                    <ul><li>Health - 4</li></ul>
+                <li>John  Doe - Mage</li>
+                    <ul><li>Health - 4</li></ul>
+            </ul> -->
 
-                </ul>
+            <ul>
+                {% for player, value in request.session.stats.items %}
+                        <li>{{player}} - {{value.name}} </li>
+                        <ul><li>Health - {{value.health}}</li></ul>
+                {% endfor %}
+            </ul>
+
+
         </div>
 
 
         <div class='middle'>
+            <p class='temp'>{{request.session.stats}}</p>
             <img src='static/game/img/exampleMap.jpg' alt="Main Board" class = 'board'>
 
         </div>
@@ -187,22 +200,28 @@
 
         <div class="container playerStats">
             <h2>Personal Player Stats</h2>
-            <li>Health - {{characterHealth}}</li>
-            <li>Energy Level - {{characterEnergy}}</li>
-            <li>Status - {{characterStatus}}</li> 
-            <li>Items:</li>
-            <ul>
-                {{characterItems | safe}}
-            </ul>
 
-            <div class="container cardHnd">
-                <div class="card"><h1>7</h1></div>
-                <div class="card"><h1>7</h1></div>
-                <div class="card"><h1>7</h1></div>
+            {% for player, value in request.session.stats.items %}
+                {% if player == name %}
+                    <li>Health - {{value.health}}</li>
+                    <li>Energy Level - {{value.energyLevel}}</li>
+                    <li>Status - {{value.status}}</li> 
+                    <li>Items:</li>
+                    <ul>
+                        <li>Weapon: {{value.items.weapon.name}}</li>
+                        <li>Head Armor: {{value.items.headArmor.name}}</li>
+                        <li>Body Armor: {{value.items.bodyArmor.name}}</li>
+                        <li>Leg Armor: {{value.items.legArmor.name}}</li>
+                    </ul>
 
-                {{characterCards | safe}}
+                    <div class="container cardHnd">
+                        <div class="card"><h1>{{value.cards.card1}}</h1></div>
+                        <div class="card"><h1>{{value.cards.card2}}</h1></div>
+                        <div class="card"><h1>{{value.cards.card3}}</h1></div>
 
-            </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
 
 
