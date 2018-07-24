@@ -15,99 +15,201 @@
     <!-- Custom styles for this template -->
     <link href="starter-template.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'game/css/gameStyle.css' %}" />
+    <script
+			  src="https://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+    <script>
 
+        $(document).ready(function){
+            var map = [
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
+            [0,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,0],
+            [0,2,1,2,2,1,2,2,1,2,1,2,2,1,2,2,1,2,0],
+            [0,2,4,2,2,1,2,2,1,2,1,2,2,1,2,2,4,2,0],
+            [0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0],
+            [0,2,1,2,2,1,2,1,2,2,2,1,2,1,2,2,1,2,0],
+            [0,2,1,1,1,1,2,1,1,2,1,1,2,1,1,1,1,2,0],
+            [0,2,2,2,2,1,2,2,1,1,1,2,2,1,2,2,2,2,0],
+            [2,2,2,2,2,1,2,1,1,2,1,1,2,1,2,2,2,2,2],
+            [0,0,0,0,0,1,1,1,2,1,2,1,1,1,0,0,0,0,0],
+            [2,2,2,2,2,1,2,1,1,6,1,1,2,1,2,2,2,2,2],
+            [0,2,2,2,2,1,2,1,2,2,2,1,2,1,2,2,2,2,0],
+            [0,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,0],
+            [0,2,1,2,2,1,2,2,1,0,1,2,2,1,2,2,1,2,0],
+            [0,2,4,1,2,1,1,1,1,0,1,1,1,1,2,1,4,2,0],
+            [0,2,2,1,2,1,2,1,2,2,2,1,2,1,2,1,2,2,0],
+            [0,2,1,1,1,1,2,1,1,2,1,1,2,1,1,1,1,2,0],
+            [0,2,1,2,2,2,2,2,1,2,1,2,2,2,2,2,1,2,0],
+            [0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0],
+            [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
+            [0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        ];
+            // var map = {{ loadMap }}
+            function displayWorld(){
+                var output = '';
+                var tileDict = {
+                    0: 'wall',
+                    1: 'water',
+                    2: 'wall',
+                    3: 'lamppost',
+                    10: 'grass',
+                    11: 'castlefloor',
+                    12: 'ladder',
+                    30: 'door'
+                }
+                print("I'm here!!")
+                for(var i=0; i<map.length; i++){
+                    output = output += "\n<div class='row'>";
+                    for(var j=0; j<map[i].length; j++){
+                        output = output += "<div class='" + tileDict[map[i][j][0]] + "'></div>";
+                    }
+                    output += "\n</div>";
+                }
+                console.log(output);
+                document.getElementById('playerMap').innerHTML = output;
+            }
+            playerFacing = 'up';
+            function displayPlayerChar(){
+                document.getElementById('playerChar').style.top = (playerChar.y)*30+"px";
+                document.getElementById('playerChar').style.left = (playerChar.x*30)+"px";
+            }
+            function displayCards(){
+                document.getElementById('score').innerHTML = score;
+            }
+            function choosePlayerCharImage(keyPress){
+                var dec;
+                if(keyPress == 37){
+                    dec = "url('/mainBoard/{{ player.character }}Left.png')";
+                } else if(keyPress == 39){
+                    dec = "url('/mainBoard/{{ player.character }}Right.png')";
+                } else if(keyPress == 38){
+                    dec = "url('/mainBoard/{{ player.character }}Up.png')";
+                } else if(keyPress == 40){
+                    dec = "url('/mainBoard/{{ player.character }}down.png')";
+                }
+                return dec;
+            }
+            displayWorld();
+            displayPlayerChar();
+            displayCards();
+            displayStats();
 
+            document.onkeydown = function(e){
+                var key = e.keyCode;
+                var img = choosePlayerCharImage(key);
+                def actionInput(key){
+                    var affectedTile = ''
+                    var actionType = ''
+                    var directionDict = {
+                        37: map[playerChar.y][(playerChar.x-1)],
+                        39: map[playerChar.y][playerChar.x+1],
+                        38: map[playerChar.y-1][playerChar.x],
+                        40: map[playerChar.y+1][playerChar.x]
+                    }
+                    if(key in [37,38,39,40]){
+                        affectedTile = directionDict[key];
+                        actionType = 'move'
+                    } else if(key == 88){
+                        facingdict = {
+                            'up': directionDict[38],
+                            'down': directionDict[40],
+                            'left': directionDict[37],
+                            'right': directionDict[39],
+                        }
+                        affectedTile = facingDict[playerFacing];
+                        actionType = 'physicalAttack'
+                    }
+                    outcome = actionResult(affectedTile, actionType)
+                    
+                }
+                //console.log(e.keyCode);
+                displayplayerChar();
+            }
+            function actionResult(affectedTile, actionType){
+                var outcome = ''
+                if((affectedTile[1] != 0)) and(actionType == 'move'){
+                    return "no change"
+                } else {
+                    fightOutcome = playerFight('playerChar.name', affectedTile[1])
+                    if(player_kill){
+                        affectedTile = affectedTile[affectedTile[0],0]
+                    }
 
-    <style>
-        *{
-            /* outline: 1px dotted red; */
-            font-family: MedievalSharp;
-        }
+                    }
+                    return fightOutcome
+                }
+                var matrix = {
+                    'move': {
+                        0: (
+                            outcome = "no change"
+                        ),
+                        1: (
+                            outcome = "no change"
+                        ),
+                        2: (
+                            outcome = "no change"
+                        ),
+                        3: (
+                            outcome = "no change"
+                        ),
+                        10: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        11: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        12: (
+                            playerChar['vigor'] -= 2
+                        ),
+                        13: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        20: (
+                            playerChar['health'] -= 2
+                        ),
+                        30: (
+                            playerChar['vigor']
+                            // load new map
+                        ),
 
-        body{
-            background-color: #6c2505;
-            background-size: 40px 160px, 60px 29px, 27px 27px;
-            background-image: linear-gradient(90deg, #551c07 50%, transparent 50%),
-                linear-gradient(94deg, rgba(91,33,5,.1) 0%,rgba(83,29,4,0.32) 23%,rgba(74,24,3,.41) 47%,rgba(80,27,5,0.44) 70%,rgba(81,27,5,0.59) 74%,rgba(93,33,4,0.2) 83%,rgba(115,43,3,.5) 100%),
-                linear-gradient(90deg, #541c09 50%, transparent 50%),
-                linear-gradient(90deg, #7a2e00 50%, #632401 50%);
-
+                    },
+                    'physicalAttack': {
+                        0: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        1: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        2: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        3: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        10: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        11: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        12: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        13: (
+                            playerChar['vigor'] -= 1
+                        ),
+                        30: (
+                            playerChar['vigor'] -= 1
+                        ),
+                    },
+                }
+            }
         }
-
-        h1 {
-            font-family: MedievalSharp;
-            font-size: 24px;
-            font-style: normal;
-            font-variant: normal;
-            font-weight: 500;
-            line-height: 26.4px;
-        }
-        h3 {
-            font-family: MedievalSharp;
-            font-size: 14px;
-            font-style: normal;
-            font-variant: normal;
-            font-weight: 500;
-            line-height: 15.4px;
-        }
-        p {
-            font-family: MedievalSharp;
-            font-size: 14px;
-            font-style: normal;
-            font-variant: normal;
-            font-weight: 400;
-            line-height: 20px;
-        }
-
-        main{
-            /* background-color: #797746; */
-            padding: 20px 0px;
-            width:100%;
-        }
-        .playerStats{
-            display: inline-block;
-            width: 20%;
-            height: auto;
-            background-color: #959490;
-            vertical-align: top;
-            border-radius: 5px;
-            box-shadow: 2px 2px 2px black;
-        }
-
-        /* .personalPlayerStats{
-            display: inline-block;
-            width: 25%;
-            height: auto;
-            background-color: grey;
-            vertical-align: top;
-        } */
-        .middle{
-            display: inline-block;
-            width: 49%;
-            background-size: contain;
-            vertical-align: top;
- 
-        }
-        .board{
-            width:75%;
-            border: 5px outset;
-            border-radius: 5px;
-        }
-        .cardHand{
-            width: 99%;
-            margin: auto;
-            height: 200px;
-            padding: 10px 0px;
-        }
-        .card{
-            width:30%;
-            height:100px;
-            text-align: center;   
-            display: inline-block;
-            background-color:  rgba(139,69,19,.8);    
-        }
-    </style>
-
+    </script>
   </head>
 
   <body>
@@ -179,10 +281,7 @@
         </div>
 
 
-        <div class='middle'>
-            <img src='static/game/img/exampleMap.jpg' alt="Main Board" class = 'board'>
-
-        </div>
+        <div id='playerMap'></div>
         
 
         <div class="container playerStats">

@@ -74,10 +74,10 @@
                 <div class="container">
                     <h1 class="display-3">Team </h1>
 
-                    {% for player in players %}
+                    {% for player, value in players.items %}
                         <ul>
                             {{player}}
-                            <ul><li> test {{player.character}}</li></ul>
+                            <ul><li> {{value.character}}</li></ul>
                         </ul>
 
                     {% endfor %}

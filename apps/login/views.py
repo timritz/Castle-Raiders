@@ -10,6 +10,7 @@ def index(request):
         request.session['names_list'] = []
         request.session['players'] = {}
         request.session['id'] = 1
+        request.session.modified = True
 
 
 
@@ -46,7 +47,7 @@ def processIndex(request):
             }
 
             request.session['test'] = 'successful'
-
+            request.session.modified = True
         print('index players:', request.session['players'])
 
 
@@ -62,7 +63,8 @@ def setup(request, name):
         'players': request.session['players']
 
     }
-
+    print('context players: ', context['players'])
+    print('context players: ', context['players'])
     print('context players: ', context['players'])
     return render(request, 'login/setup.html', context)
 
