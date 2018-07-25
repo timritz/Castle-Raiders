@@ -26,23 +26,16 @@
     </script>
 
     <style>
-        .wall{
+        .tile{
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
             width: 10%;
             height: 60px;
-            background-color: green;
             margin: 0px;
             padding-bottom: 10%;
         }
-        .water{
-            width: 10%;
-            height: 60px;
-            background-color: lightsteelblue;
-            margin: 0px;
-            padding-bottom: 10%;
-
-        }
-        .player{
-            background-image:url('static/game/img/Knight.png');
+        .playerTile{
             background-color: red;
             background-size: contain;
             background-repeat: no-repeat;
@@ -292,11 +285,15 @@
             var tileDict = {
                 0: 'wall',
                 1: 'water',
-                2: 'wall',
-                3: 'lamppost',
+                2: 'grassWater_front',
+                3: 'wall',
+                4: 'wall_bottom',
+                5: 'lamppost',
                 10: 'grass',
-                11: 'castlefloor',
-                12: 'ladder',
+                11: 'stone_floor',
+                12: 'ladder_bottom',
+                13: 'ladder',
+                14: 'ladder_top',
                 30: 'door'
             }
             // print("I'm here!!")
@@ -306,18 +303,14 @@
                 output = output += "<div class='row'>";
                 for(var j=0; j<map[i].length; j++){
 
-                    console.log('map spot', map[i][j][1])
-
                     if(map[i][j][1]==""){
-                        output = output += "<div class='" + tileDict[map[i][j][0]] + "'></div>";
+                        output = output += "<div class='tile' style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
                         // console.log('player found')
                     }else{
-                        output = output += "<div class='" + tileDict[map[i][j][0]] + " player'></div>";
+                        var playerName = map[i][j][1];
+                        characterType = {{ request.session.stats.playerName.name }}
+                        output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/" + tileDict[map[i][j][0]] +".png'), url('/static/game/img/" + characterType +".png')\"></div>";
                     }
-
-
-
-
                 }
                 output += "</div>";
             }
