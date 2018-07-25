@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e03e4a91-bbce-474b-9b99-737bbb3da82a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/Character_Attributes_OOP.py" beforeDir="false" afterPath="$PROJECT_DIR$/Character_Attributes_OOP.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/game/templates/game/mainBoard.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/game/templates/game/mainBoard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/game/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/game/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/temp_main.html" beforeDir="false" afterPath="$PROJECT_DIR$/temp_main.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -55,8 +54,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/game/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="142" column="44" lean-forward="true" selection-start-line="142" selection-start-column="44" selection-end-line="142" selection-end-column="44" />
+            <state relative-caret-position="-211">
+              <caret line="115" column="113" lean-forward="true" selection-start-line="115" selection-start-column="113" selection-end-line="115" selection-end-column="113" />
               <folding>
                 <element signature="e#0#59#0" expanded="true" />
               </folding>
@@ -113,10 +112,11 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="2153" />
-    <option name="width" value="974" />
-    <option name="height" value="1047" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="2784" />
+    <option name="y" value="-10" />
+    <option name="width" value="340" />
+    <option name="height" value="174" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -140,6 +140,21 @@
               <item name="Final_project" type="b2602c69:ProjectViewProjectNode" />
               <item name="Final_project" type="462c0819:PsiDirectoryNode" />
               <item name="apps" type="462c0819:PsiDirectoryNode" />
+              <item name="game" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Final_project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Final_project" type="462c0819:PsiDirectoryNode" />
+              <item name="apps" type="462c0819:PsiDirectoryNode" />
+              <item name="game" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Final_project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Final_project" type="462c0819:PsiDirectoryNode" />
+              <item name="apps" type="462c0819:PsiDirectoryNode" />
+              <item name="game" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
               <item name="game" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -195,10 +210,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2153" y="0" width="974" height="1047" extended-state="0" />
+    <frame x="2152" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" side_tool="true" visible="true" weight="0.26175213" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" side_tool="true" visible="true" weight="0.12908325" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
@@ -331,8 +346,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/game/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="142" column="44" lean-forward="true" selection-start-line="142" selection-start-column="44" selection-end-line="142" selection-end-column="44" />
+        <state relative-caret-position="-211">
+          <caret line="115" column="113" lean-forward="true" selection-start-line="115" selection-start-column="113" selection-end-line="115" selection-end-column="113" />
           <folding>
             <element signature="e#0#59#0" expanded="true" />
           </folding>
