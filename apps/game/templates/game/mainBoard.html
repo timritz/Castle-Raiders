@@ -9,12 +9,44 @@
 
     <title>"Game Name"</title>
 
+    {% load static %}
+
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="starter-template.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+
+
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+    </script>
+
+    <style>
+        .tile{
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 10%;
+            height: 60px;
+            margin: 0px;
+            padding-bottom: 10%;
+        }
+        .playerTile{
+            background-color: red;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 10%;
+            height: 60px;
+            margin: 0px;
+            padding-bottom: 10%;
+        }
+
+    </style>
 
 
 
@@ -84,6 +116,7 @@
         .middle{
             display: inline-block;
             width: 49%;
+            height: 200px;
             background-size: contain;
             vertical-align: top;
  
@@ -106,6 +139,19 @@
             display: inline-block;
             background-color:  rgba(139,69,19,.8);    
         }
+        .temp{
+            color: white;
+        }
+
+
+        .pic{
+            background-color: red;
+            width: 20px;
+            height: 20px;
+            float:right;
+            
+        }
+
     </style>
 
   </head>
@@ -140,22 +186,6 @@
                     <a class="nav-link" href="/game/items" target="_blank">Item Wiki</a>
                 </li>
     
-
-
-
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li> -->
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
-                </li> -->
             </ul>
         </div>
     </nav>
@@ -163,51 +193,132 @@
     <main role="main" class="container-fluid">
         <div class="container playerStats">
             <h2>All Player Stats</h2>
-                <ul>
-                    <li>TempName {{name}} - TempCharacter{{character}}</li>
-                        <ul><li>Health - 4</li></ul>
-                    <li>Timmy Toe - Knight</li>
-                        <ul><li>Health - 4</li></ul>
-                    <li>Kimmy Koe - Cleric</li> 
-                        <ul><li>Health - 4</li></ul>
-                    <li>John  Doe - Mage</li>
-                        <ul><li>Health - 4</li></ul>
+            
 
-                    {{characterList | safe}}
+            <ul>
+                {% for player, value in request.session.stats.items %}
+                        <li>{{player}} - {{value.name}} </li>
+                        <ul><li>Health - {{value.health}}</li></ul>
+                {% endfor %}
+            </ul>
 
-                </ul>
+
         </div>
 
 
         <div class='middle'>
-            <img src='static/game/img/exampleMap.jpg' alt="Main Board" class = 'board'>
+            <!-- <p class='temp'>{{request.session.stats}}</p> -->
+            <!-- <img src='static/game/img/exampleMap.jpg' alt="Main Board" class = 'board'> -->
+
+            <div id='playerMap'></div>
 
         </div>
         
 
         <div class="container playerStats">
             <h2>Personal Player Stats</h2>
-            <li>Health - {{characterHealth}}</li>
-            <li>Energy Level - {{characterEnergy}}</li>
-            <li>Status - {{characterStatus}}</li> 
-            <li>Items:</li>
-            <ul>
-                {{characterItems | safe}}
-            </ul>
 
-            <div class="container cardHnd">
-                <div class="card"><h1>7</h1></div>
-                <div class="card"><h1>7</h1></div>
-                <div class="card"><h1>7</h1></div>
+            {% for player, value in request.session.stats.items %}
+                {% if player == name %}
+                    <li>Health - {{value.health}}</li>
+                    <li>Energy Level - {{value.energyLevel}}</li>
+                    <li>Status - {{value.status}}</li> 
+                    <li>Items:</li>
+                    <ul>
+                        <li>Weapon: {{value.items.weapon.name}}</li>
+                        <li>Head Armor: {{value.items.headArmor.name}}</li>
+                        <li>Body Armor: {{value.items.bodyArmor.name}}</li>
+                        <li>Leg Armor: {{value.items.legArmor.name}}</li>
+                    </ul>
 
-                {{characterCards | safe}}
+                    <div class="container cardHnd">
+                        <div class="card"><h1>{{value.cards.card1}}</h1></div>
+                        <div class="card"><h1>{{value.cards.card2}}</h1></div>
+                        <div class="card"><h1>{{value.cards.card3}}</h1></div>
 
-            </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
 
 
 
     </main><!-- /.container -->
+
+
+    <script>
+
+        // var map = [
+        //     [0,0,0,0,0,0,0,0,0,0],
+        //     [0,2,2,2,2,2,2,2,2,2],
+        //     [0,2,1,1,1,1,1,1,1,2],
+        //     [0,2,1,2,2,1,2,2,1,2],
+        //     [0,2,1,2,2,1,2,2,1,2],
+        //     [0,2,1,1,1,1,1,1,1,1],
+        //     [0,2,1,2,2,1,2,1,2,2],
+        //     [0,2,1,1,1,1,2,1,1,2],
+        //     [0,2,2,2,2,1,2,2,1,1],
+        //     [2,2,2,2,2,1,2,1,1,2],
+            
+        // ];
+
+        // var map = [
+        //     [0,0,0,0],
+        //     [0,1,1,0],
+        //     [0,1,1,0],
+        //     [0,0,0,0],
+        // ]
+
+        var map = {{map}}
+
+        console.log(map)
+
+        function displayWorld(){
+
+            var output = '';
+            var tileDict = {
+                0: 'wall',
+                1: 'water',
+                2: 'grassWater_front',
+                3: 'wall',
+                4: 'wall_bottom',
+                5: 'lamppost',
+                10: 'grass',
+                11: 'stone_floor',
+                12: 'ladder_bottom',
+                13: 'ladder',
+                14: 'ladder_top',
+                30: 'door'
+            }
+            // print("I'm here!!")
+
+            var output = ""
+            for(var i=0; i<map.length; i++){
+                output = output += "<div class='row'>";
+                for(var j=0; j<map[i].length; j++){
+
+                    if(map[i][j][1]==0){
+                        output = output += "<div class='tile' style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
+                        // console.log('player found')
+                    }else{
+                        var playerName = map[i][j][1];
+                        characterType = {{ request.session.stats.playerName.name }}
+                        output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/" + tileDict[map[i][j][0]] +".png'), url('/static/game/img/" + characterType +".png')\"></div>";
+                    }
+                }
+                output += "</div>";
+            }
+            // console.log('output')
+            // console.log(output);
+            document.getElementById('playerMap').innerHTML = output;
+        }
+        displayWorld()
+
+        function displayCharacter(){
+
+        }
+        
+    </script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

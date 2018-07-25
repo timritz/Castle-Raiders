@@ -1,17 +1,16 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
-
+from apps.game.models import Player
 
 def index(request):
     messages = ''
 
 
     if 'players' not in request.session:
-        request.session['names_list'] = []
         request.session['players'] = {}
         request.session['id'] = 1
 
-
+        request.session.modified = True
 
     return render(request, 'login/index.html')
 
@@ -23,23 +22,9 @@ def processIndex(request):
 
         if(request.POST['user_type'] == "player"):
 
-        #         request.session['names_list'].append({
-        #             'name': request.POST['inputName'],
-        #             'id': request.session['id'],
-        #             'character': "",
-        #         })
-        #
-        #         print('id', request.session['id'])
-        #         request.session['id'] += 1;
-        #
-        #     print('names_list', request.session['names_list'])
-        #     print('id', request.session['id'])
-        #
-        #
-        # return redirect('/setup/' + str(request.session['names_list'][len(request.session['names_list'])-1]['name']))
-
             print(request.POST['inputName'])
-            request.session['players'][request.POST['inputName']] = {
+            newPlayer = request.POST['inputName']
+            request.session['players'][newPlayer] = {
                 # 'name': request.POST['inputName'],
                 'id':  request.session['id'],
                 'character': "test"
@@ -47,8 +32,10 @@ def processIndex(request):
 
             request.session['test'] = 'successful'
 
-        print('index players:', request.session['players'])
+            request.session.modified = True
 
+
+        print('index players:', request.session['players'])
 
     return redirect('/setup/' + request.POST['inputName'])
 
@@ -57,15 +44,37 @@ def setup(request, name):
     print('setup players:', request.session['players'])
     print('test', request.session['test'])
 
-
     context = {
-        'players': request.session['players']
-
+        'players': request.session['players'],
+        'name': name
     }
 
-    print('context players: ', context['players'])
     return render(request, 'login/setup.html', context)
 
 def reset(request):
     request.session.clear()
+    to_be_deleted = Player.objects.all()
+    to_be_deleted.delete()
     return redirect('/')
+
+def updateGroup(request, name):
+
+    if(request.method=='POST'):
+
+        print("form", request.POST)
+        print('unupdate players: ', request.session['players'])
+        print("player", request.session['players'][name])
+        print("stat", request.session['players'][name]['character'])
+
+        request.session['players'][name]['character'] = request.POST['characterChoice']
+
+        print("stat", request.session['players'][name]['character'])
+
+        request.session.modified = True
+
+
+        context = {
+            'players': request.session['players']
+        }
+
+    return redirect('/setup/' + name)
