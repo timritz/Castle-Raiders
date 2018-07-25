@@ -10,9 +10,10 @@ class Character:
         self.defenseBonus = 0    # assign bonus stat with super after inheriting Character
         self.movementSpeed = 2   # 2 squares / movement action
                                  # can overwrite to assign new movement speed after inheriting
-        # self.energyLevel = 10    # stat you can spend to perform special attacks
+        self.energyLevel = 10    # stat you can spend to perform special attacks
         self.status = "normal"   # can be changed to hold an status effects on character (ie. paralyzed, poisoned, ...)
         self.direction = "up"    # holds the direction a character is facing and changes based on movement action
+        self.priority = 0
 
         # This is my interpretation of Riley's dictionary for character items
         self.items = {
@@ -89,6 +90,8 @@ class Knight(Character):
         self.attackBonus = 7  # assign bonus stat with super after inheriting Character
         self.defenseBonus = 5  # assign bonus stat with super after inheriting Character
 
+        self.priority = 4
+
         self.items = {
             'weapon': {'name': "Broadsword", 'statBonus': 0},
             'headArmor': {'name': "Iron Helmet", 'statBonus': 0},
@@ -107,6 +110,8 @@ class Mage(Character):
         self.health = 4  # assign bonus stat with super after inheriting Character
         self.attackBonus = 6  # assign bonus stat with super after inheriting Character
         self.defenseBonus = 4  # assign bonus stat with super after inheriting Character
+
+        self.priority = 3
 
         self.items = {
             'weapon': {'name': "Staff", 'statBonus': 0},
@@ -127,6 +132,8 @@ class Rogue(Character):
         self.attackBonus = 2  # assign bonus stat with super after inheriting Character
         self.defenseBonus = 3  # assign bonus stat with super after inheriting Character
 
+        self.priority = 2
+
         self.items = {
             'weapon': {'name': "Knife", 'statBonus': 0},
             'headArmor': {'name': "Leather Helmet", 'statBonus': 0},
@@ -146,6 +153,8 @@ class Bard(Character):
         self.attackBonus = 1  # assign bonus stat with super after inheriting Character
         self.defenseBonus = 7  # assign bonus stat with super after inheriting Character
         self.movementSpeed = 3
+
+        self.priority = 1
 
         self.items = {
             'weapon': {'name': "Harp", 'statBonus': 0},
