@@ -196,9 +196,14 @@
             
 
             <ul>
-                {% for player, value in request.session.stats.items %}
+                <!-- {% for player, value in request.session.stats.items %}
                         <li>{{player}} - {{value.name}} </li>
                         <ul><li>Health - {{value.health}}</li></ul>
+                {% endfor %} -->
+
+                {% for player, value in orderedPlayers.items %}
+                    <li>{{player}} - {{value.name}} </li>
+                    <ul><li>Health - {{value.health}}</li></ul>
                 {% endfor %}
             </ul>
 
@@ -216,7 +221,7 @@
         
 
         <div class="container playerStats">
-            <h2>Personal Player Stats</h2>
+            <h2>{{name}}'s Private Stats</h2>
 
             {% for player, value in request.session.stats.items %}
                 {% if player == name %}
@@ -269,7 +274,8 @@
         //     [0,0,0,0],
         // ]
 
-        var map = {{map}}
+        var map = {{map | safe}}
+
 
         console.log(map)
 
@@ -297,7 +303,7 @@
                 output = output += "<div class='row'>";
                 for(var j=0; j<map[i].length; j++){
 
-                    if(map[i][j][1]==0){
+                    if(map[i][j][1]==""){
                         output = output += "<div class='tile' style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
                         // console.log('player found')
                     }else{
