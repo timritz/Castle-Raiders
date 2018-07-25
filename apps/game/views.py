@@ -75,7 +75,6 @@ def prep_game(request, name):
 
         for player in submittedPlayerList:
             print('player:', player)
-<<<<<<< HEAD
 print('session', request.session['stats'][player])
 
 
@@ -94,81 +93,49 @@ print('session', request.session['stats'][player])
 
 
 first_time = True
-=======
-            print('session', request.session['stats'][player])
 
-        # map = [
-        #     [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [1, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [1, 0], [0, 0], [1, 0], [1, 0], [1, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [0, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0]],
-        # ]
+    if (first_time):
+        first_time
+        positions = {}
 
-        map = [
-            [[0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""]],
-            [[0, ""], [2, ""], [1, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""]],
-            [[0, ""], [2, ""], [1, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""]],
-            [[0, ""], [2, ""], [1, ""], [1, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""]],
-            [[0, ""], [2, ""], [1, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""]],
-            [[0, ""], [2, ""], [1, ""], [0, ""], [1, ""], [0, ""], [1, ""], [1, ""], [1, ""], [0, ""]],
-            [[0, ""], [2, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""]],
-            [[0, ""], [2, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""]],
-            [[0, ""], [2, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""]],
-            [[0, ""], [2, ""], [0, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""]],
-        ]
+        positions = {
+            '1': [0, 0],
+            '2': [len(map[0]) - 1, 0],
+            '3': [0, len(map) - 1],
+            '4': [len(map[0]) - 1, len(map) - 1]
+        }
 
-        # needs to be from session
-        first_time = True
->>>>>>> 2f5ceec922308125be45c14fd290c092ed65f718
+        print('all positions', positions)
+        counter = 1
+        for player, value in request.session['stats'].items():
+            print('position', positions[str(counter)])
+            print(player, value)
 
-        if (first_time):
-            first_time
-            positions = {}
+            value['position']['x'] = positions[str(counter)][0]
+            value['position']['y'] = positions[str(counter)][1]
 
-            positions = {
-                '1': [0, 0],
-                '2': [len(map[0]) - 1, 0],
-                '3': [0, len(map) - 1],
-                '4': [len(map[0]) - 1, len(map) - 1]
-            }
+            map[value['position']['y']][value['position']['x']][1] = player
 
-            print('all positions', positions)
-            counter = 1
-            for player, value in request.session['stats'].items():
-                print('position', positions[str(counter)])
-                print(player, value)
+            print(counter, value['position'])
+            counter += 1
 
-                value['position']['x'] = positions[str(counter)][0]
-                value['position']['y'] = positions[str(counter)][1]
+        print(request.session['stats'].items())
+        orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
 
-                map[value['position']['y']][value['position']['x']][1] = player
+        # for player, value in request.session['stats'].items():
+        #     print(player)
+        #     print(value)
+        #
+        #     orderedPlayerDict[player] = value
 
-                print(counter, value['position'])
-                counter += 1
-
-            print(request.session['stats'].items())
-            orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
-
-            # for player, value in request.session['stats'].items():
-            #     print(player)
-            #     print(value)
-            #
-            #     orderedPlayerDict[player] = value
-
-            for player in orderedPlayerDict:
-                print(player, orderedPlayerDict[player]['name'])
+        for player in orderedPlayerDict:
+            print(player, orderedPlayerDict[player]['name'])
 
 
-        request.session['map'] = map
-        request.session['orderedPlayerDict'] = orderedPlayerDict
-        request.session['map'] = map
-        request.session['map'] = map
+    request.session['map'] = map
+    request.session['orderedPlayerDict'] = orderedPlayerDict
+    request.session['map'] = map
+    request.session['map'] = map
 
 
 
@@ -176,8 +143,4 @@ first_time = True
 
 
 
-<<<<<<< HEAD
 return redirect ('/game/'+ name)
-=======
-    return redirect ('/game/'+ name)
->>>>>>> 2f5ceec922308125be45c14fd290c092ed65f718
