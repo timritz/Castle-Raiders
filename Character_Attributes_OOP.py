@@ -10,7 +10,7 @@ class Character:
         self.defenseBonus = 0    # assign bonus stat with super after inheriting Character
         self.movementSpeed = 2   # 2 squares / movement action
                                  # can overwrite to assign new movement speed after inheriting
-        self.energyLevel = 10    # stat you can spend to perform special attacks
+        # self.energyLevel = 10    # stat you can spend to perform special attacks
         self.status = "normal"   # can be changed to hold an status effects on character (ie. paralyzed, poisoned, ...)
         self.direction = "up"    # holds the direction a character is facing and changes based on movement action
 

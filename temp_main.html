@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>"Game Name"</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'game/css/gameStyle.css' %}" />
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+    </script>
+
+    <style>
+        .wall{
+            width: 10px;
+            height: 10px;
+            background-color: grey;
+            margin: 0px;
+        }
+        .water{
+            width: 10px;
+            height: 10px;
+            background-color: lightblue;
+            margin: 0px;
+
+        }
+
+    </style>
+    
+    
+
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand">Link List</a>      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!-- <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/how_to_play" target="_blank" >How To Play</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/characters" target="_blank" >Character Wiki</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/enemies" target="_blank">Enemy Wiki</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/items" target="_blank">Item Wiki</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <main role="main" class="container-fluid">
+        <div class="container playerStats">
+            <h2>All Player Stats</h2>
+                <ul>
+                    <li>TempName {{name}} - TempCharacter{{character}}</li>
+                        <ul><li>Health - 4</li></ul>
+                    <li>Timmy Toe - Knight</li>
+                        <ul><li>Health - 4</li></ul>
+                    <li>Kimmy Koe - Cleric</li> 
+                        <ul><li>Health - 4</li></ul>
+                    <li>John  Doe - Mage</li>
+                        <ul><li>Health - 4</li></ul>
+                    {{characterList | safe}}
+                </ul>
+        </div>
+        <div id='playerMap'></div>
+        
+        <div class="container playerStats">
+            <h2>Personal Player Stats</h2>
+            <li>Health - {{characterHealth}}</li>
+            <li>Energy Level - {{characterEnergy}}</li>
+            <li>Status - {{characterStatus}}</li> 
+            <li>Items:</li>
+            <ul>
+                {{characterItems | safe}}
+            </ul>
+            <div class="container cardHand">
+                <div class="card"><h1>7</h1></div>
+                <div class="card"><h1>7</h1></div>
+                <div class="card"><h1>7</h1></div>
+                {{characterCards | safe}}
+            </div>
+        </div>
+    </main><!-- /.container -->
+
+
+    <script>
+
+        var map = [
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
+            [0,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,0],
+            [0,2,1,2,2,1,2,2,1,2,1,2,2,1,2,2,1,2,0],
+            [0,2,1,2,2,1,2,2,1,2,1,2,2,1,2,2,1,2,0],
+            [0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0],
+            [0,2,1,2,2,1,2,1,2,2,2,1,2,1,2,2,1,2,0],
+            [0,2,1,1,1,1,2,1,1,2,1,1,2,1,1,1,1,2,0],
+            [0,2,2,2,2,1,2,2,1,1,1,2,2,1,2,2,2,2,0],
+            [2,2,2,2,2,1,2,1,1,2,1,1,2,1,2,2,2,2,2],
+            [0,0,0,0,0,1,1,1,2,1,2,1,1,1,0,0,0,0,0],
+            [2,2,2,2,2,1,2,1,1,1,1,1,2,1,2,2,2,2,2],
+            [0,2,2,2,2,1,2,1,2,2,2,1,2,1,2,2,2,2,0],
+            [0,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,0],
+            [0,2,1,2,2,1,2,2,1,0,1,2,2,1,2,2,1,2,0],
+            [0,2,1,1,2,1,1,1,1,0,1,1,1,1,2,1,1,2,0],
+            [0,2,2,1,2,1,2,1,2,2,2,1,2,1,2,1,2,2,0],
+            [0,2,1,1,1,1,2,1,1,2,1,1,2,1,1,1,1,2,0],
+            [0,2,1,2,2,2,2,2,1,2,1,2,2,2,2,2,1,2,0],
+            [0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0],
+            [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
+            [0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        ];
+
+        // var map = [
+        //     [0,0,0,0],
+        //     [0,1,1,0],
+        //     [0,1,1,0],
+        //     [0,0,0,0],
+        // ]
+
+        console.log(map)
+
+        function displayWorld(){
+
+            var output = '';
+            var tileDict = {
+                0: 'wall',
+                1: 'water',
+                2: 'wall',
+                3: 'lamppost',
+                10: 'grass',
+                11: 'castlefloor',
+                12: 'ladder',
+                30: 'door'
+            }
+            // print("I'm here!!")
+
+            var output = ""
+            for(var i=0; i<map.length; i++){
+                output = output += "<div class='row'>";
+                for(var j=0; j<map[i].length; j++){
+                    output = output += "<div class='" + tileDict[map[i][j]] + "'></div>";
+                }
+                output += "</div>";
+            }
+            console.log('output')
+            console.log(output);
+            document.getElementById('playerMap').innerHTML = output +  "<h1>hello world</h1>";
+        }
+        displayWorld()
+        
+    </script>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

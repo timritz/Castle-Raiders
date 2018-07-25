@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
-
+from apps.game.models import Player
 
 def index(request):
     messages = ''
@@ -53,6 +53,8 @@ def setup(request, name):
 
 def reset(request):
     request.session.clear()
+    to_be_deleted = Player.objects.all()
+    to_be_deleted.delete()
     return redirect('/')
 
 def updateGroup(request, name):
