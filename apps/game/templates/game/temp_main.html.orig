@@ -20,10 +20,11 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
-    <script
-    src="https://code.jquery.com/jquery-2.2.4.min.js"
-    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-    crossorigin="anonymous"></script>
+    <!-- <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+    </script> -->
 
     <style>
         .tile{
@@ -351,38 +352,24 @@
                 14: 'ladder_top',
                 30: 'door'
             }
-            console.log("~")
-            console.log("I'm here 1")
             // print("I'm here!!")
 
             var output = ""
             for(var i=0; i<map.length; i++){
                 output = output += "<div class='row'>";
                 for(var j=0; j<map[i].length; j++){
+
                     if(map[i][j][1]==""){
                         output = output += "<div class='tile' style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
-                        console.log('player not found')
+                        // console.log('player found')
                     }else{
-                        console.log('/game/getPlayerChar/' + map[i][j][1])
-                        var playerChar = map[i][j][1];
-                        console.log("I'm here 2")
-                        $.ajax({
-                            async: 'false',
-                            dataType: 'html',
-                            method: "GET",
-                            url: "/game/getPlayerChar/" + playerChar,
-                            success: function(data){
-                                playerChar = data.toLowerCase();
-                                console.log("I'm in ajax")
-                            },
-                        });
-                        output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/" + playerChar + "-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
+                        output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/knight-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
                     }
                 }
                 output += "</div>";
             }
             // console.log('output')
-            console.log(output);
+            // console.log(output);
             document.getElementById('playerMap').innerHTML = output;
         }
         displayWorld()
@@ -485,6 +472,13 @@
 
         }
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+
+
+
+        
+=======
 
         $(document).ready(function(){
             $('button.action1').click(function(){
@@ -558,7 +552,9 @@
 
 
         
+>>>>>>> dd4d862abbb5991c5ec5cb36de0a9d45793fc242
         
+
     </script>
 
 

@@ -11,18 +11,73 @@ def index(request,name):
         'name': str(name),
         'map': request.session['map']
     }
-
+    fight(request, 'Tim', '5-5', '2')
 
     print(context['map'])
     return render(request, 'game/temp_main.html', context)
 
+
+
+def get_player_char(request, plyrName):
+    playerName = str(plyrName)
+    print("!"*60)
+    print(playerName)
+    playerChar = str(request.session['orderedPlayerDict'][plyrName]['name'])
+    print(playerChar)
+    return HttpResponse(playerChar)
+
+def serveCards(request, player):
+    player.assignCards()
+    return True
+
+
+def fight(request, attackingPlayer, effectidx, cardNum):
+    attackingPlayer = request.session['orderedPlayerDict'][attackingPlayer]
+    tile = effectidx.split('-')
+    position = [int(tile[0]), int(tile[1])]
+    defendingPlayer = request.session['orderedPlayerDict'][request.session['map'][position[0]][position[1]][1]]
+    print(defendingPlayer)
+    if defendingPlayer != "":
+
+
+    # Will take in the player who is fighting, the character who is being fought
+    # Will take in their attack, defense including cards and run the initial numbers
+    # Will use those numbers to calculate the results, then update orderedDict and return the result
+        return HttpResponse(response)
+
+def metaGame(request):
+    while(request.session['playerCount'] > 1):
+        next(runGame())
+    winner = Player.objects.filter(livingStatus='alive').first()
+    request.session['winner'] = winner
+    return template(request, 'chicken_dinner.html')    
+
+
+def runGame(request):
+    request.session['playerCount'] = 0
+    for player in request.session['orderedPlayerDict']:
+        playerCount += 1
+        serveCards(player)
+    if(playerCount == 1):
+        playerCount == 2
+    context={
+        # 'players': submittedPlayerList,
+        'orderedPlayers': request.session['orderedPlayerDict'],
+        'name': str(name),
+        'map': request.session['map']
+    }
+    while(request.session['playerCount'] > 1):
+        for player in request.session['orderedPlayerDict']:
+            if(playerName == player.name):
+                yield render(request, 'game/temp_action_main.html', context)
+            else:
+                yield render(request, 'game/temp_static_main.html', context)
+
+
+
 def prep_game(request, name):
     if(request.method == "POST"):
-        print(request.POST)
-
         for key, value in request.POST.items():
-            # print(key)
-            # print(value)
             if((key != 'csrfmiddlewaretoken') & (key != 'start')):
                 newPlayer = Player()
                 newPlayer.name = key
@@ -34,10 +89,7 @@ def prep_game(request, name):
 
                 print('final newPlayer', newPlayer.__dict__)
 
-        # print()
         playerList = Player.objects.all()
-        # print('playerList', playerList)
-        # print()
 
         characterTypeReference = {
             'Knight': Character_Attributes_OOP.Knight(),
@@ -48,102 +100,21 @@ def prep_game(request, name):
 
         request.session.clear()
 
-        print()
-        print('session', request.session.values())
-        print()
 
         submittedPlayerList = []
 
         request.session['stats'] = {}
 
         for player in playerList:
-            # print(player.characterType)
-            # print(characterTypeReference[player.characterType].__dict__)
             request.session['stats'][str(player.name)] = characterTypeReference[player.characterType].__dict__
-
-            print()
-            print("Player name:", player.name)
-            print('Session of player:', request.session['stats'][player.name])
-            print()
-
             submittedPlayerList.append(player.name)
-
-        print()
-        print('players', submittedPlayerList)
-        print('session', request.session['stats'])
-        print()
 
         for player in submittedPlayerList:
             print('player:', player)
             print('session', request.session['stats'][player])
 
-        # map = [
-        #     [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [1, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [1, 0], [0, 0], [1, 0], [1, 0], [1, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [1, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0]],
-        #     [[0, 0], [2, 0], [0, 0], [0, 0], [0, 0], [0, 0], [1, 0], [0, 0], [0, 0], [0, 0]],
-        # ]
 
-        # map = [
-        #     [[0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""]],
-        #     [[0, ""], [2, ""], [1, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""]],
-        #     [[0, ""], [2, ""], [1, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""]],
-        #     [[0, ""], [2, ""], [1, ""], [1, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""]],
-        #     [[0, ""], [2, ""], [1, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""]],
-        #     [[0, ""], [2, ""], [1, ""], [0, ""], [1, ""], [0, ""], [1, ""], [1, ""], [1, ""], [0, ""]],
-        #     [[0, ""], [2, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""]],
-        #     [[0, ""], [2, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""]],
-        #     [[0, ""], [2, ""], [1, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""]],
-        #     [[0, ""], [2, ""], [0, ""], [0, ""], [0, ""], [0, ""], [1, ""], [0, ""], [0, ""], [0, ""]],
-        # ]
-
-        map = [
-            [[11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""]],
-            [[13, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""]],
-            [[12, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""]],
-            [[11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""]],
-            [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
-            [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
-            [[2, ""], [2, ""], [2, ""], [2, ""], [11, ""], [11, ""], [2, ""], [2, ""], [2, ""], [2, ""]],
-            [[1, ""], [1, ""], [1, ""], [1, ""], [11, ""], [11, ""], [1, ""], [1, ""], [1, ""], [1, ""]],
-            [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
-            [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
-        ]
-
-        # needs to be from session
-        first_time = True
-
-        if (first_time):
-            first_time
-            positions = {}
-
-            positions = {
-                '1': [0, 0],
-                '2': [len(map[0]) - 1, 0],
-                '3': [0, len(map) - 1],
-                '4': [len(map[0]) - 1, len(map) - 1]
-            }
-    print('session', request.session['stats'][player])
-
-
-    map = [
-        [[11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""]],
-        [[13, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""]],
-        [[12, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""]],
-        [[11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""]],
-        [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
-        [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
-        [[2, ""], [2, ""], [2, ""], [2, ""], [11, ""], [11, ""], [2, ""], [2, ""], [2, ""], [2, ""]],
-        [[1, ""], [1, ""], [1, ""], [1, ""], [11, ""], [11, ""], [1, ""], [1, ""], [1, ""], [1, ""]],
-        [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
-        [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
-    ]
+    map = loadMap('entrance')
 
 
     first_time = True
@@ -189,6 +160,37 @@ def prep_game(request, name):
     request.session['map'] = map
     request.session['orderedPlayerDict'] = orderedPlayerDict
     request.session['map'] = map
-    request.session['map'] = map
 
     return redirect ('/game/'+ name)
+
+
+def loadMap(area):
+    areaMaps = {
+        'entrance':
+         [
+            [[11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""]],
+            [[13, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""]],
+            [[12, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""]],
+            [[11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""]],
+            [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
+            [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, "Jeremy"], [10, ""], [10, ""], [10, ""], [10, ""]],
+            [[2, ""], [2, ""], [2, ""], [2, ""], [11, ""], [11, ""], [2, ""], [2, ""], [2, ""], [2, ""]],
+            [[1, ""], [1, ""], [1, ""], [1, ""], [11, ""], [11, ""], [1, ""], [1, ""], [1, ""], [1, ""]],
+            [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
+            [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
+        ],
+        'foyer':
+         [
+            [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
+            [[13, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""]],
+            [[12, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""]],
+            [[11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""]],
+            [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
+            [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
+            [[2, ""], [2, ""], [2, ""], [2, ""], [11, ""], [11, ""], [2, ""], [2, ""], [2, ""], [2, ""]],
+            [[1, ""], [1, ""], [1, ""], [1, ""], [11, ""], [11, ""], [1, ""], [1, ""], [1, ""], [1, ""]],
+            [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
+            [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
+        ],
+    }
+    return areaMaps[area]
