@@ -18,12 +18,13 @@
     <link href="starter-template.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
-    <script
+    <!-- <script
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous">
-    </script>
+    </script> -->
 
     <style>
         .tile{
@@ -101,10 +102,15 @@
             display: inline-block;
             width: 20%;
             height: auto;
-            background-color: #959490;
+            background-color: inherit;
+            background-image: url('/static/game/img/scroll.png');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
             vertical-align: top;
             border-radius: 5px;
-            box-shadow: 2px 2px 2px black;
+            /* box-shadow: 2px 2px 2px black; */
+            padding: 6% 3%;
+            margin: 1% 
         }
 
         /* .personalPlayerStats{
@@ -135,7 +141,7 @@
         }
         .card{
             width:30%;
-            height:100px;
+            padding-bottom:10%;
             text-align: center;   
             display: inline-block;
             background-color:  rgba(139,69,19,.8);    
@@ -234,12 +240,24 @@
 
                     <div class="container cardHnd">
                         <div class="card"><h1>{{value.cards.card1}}</h1></div>
-                        <div class="card"><h1>{{value.cards.card2}}</h1></div>
-                        <div class="card"><h1>{{value.cards.card3}}</h1></div>
+                        <button class="card action1"><h1>{{value.cards.card2}}</h1></button>
+                        <button class="card action2"><h1>{{value.cards.card3}}</h1></button>
 
                     </div>
                 {% endif %}
             {% endfor %}
+
+            <div id='choices1' style="display: none">
+                <button class='attack1'>Attack</button>
+                <button class='move1'>Move</button>
+                <button class='rest1'>Rest</button>
+
+            </div>
+            <div id='choices2' style="display: none">
+                <button class='attack2'>Attack</button>
+                <button class='move2'>Move</button>
+                <button class='rest2'>Rest</button>
+            </div>
         </div>
 
 
@@ -257,9 +275,65 @@
     <script src="../../assets/js/vendor/popper.min.js"></script>
     <script src="../../dist/js/bootstrap.min.js"></script>
 
+
     <script>
 
+        // $(document).ready(function(){
+        //     $('button.action1').click(function(){
+        //         console.log('clicked')
+        //         $('#choices1').toggle();
+        //         $('#choices2').hide();
+        //     });
+
+        //     $('button.action2').click(function(){
+        //         console.log('clicked')
+        //         $('#choices2').toggle();
+        //         $('#choices1').hide();
+        //     });
+
+        //     $('button.attack1').click(function(){
+        //         console.log('clicked')
+        //         $('button.action1').hide();
+        //         $('#choices1').hide();
+        //     });
+
+        //     $('button.move1').click(function(){
+        //         console.log('clicked')
+        //         $('button.action1').hide();
+        //         $('#choices1').hide();
+        //     });
+
+        //     $('button.rest1').click(function(){
+        //         console.log('clicked')
+        //         $('button.action1').hide();
+        //         $('#choices1').hide();
+        //     });
+
+        //     $('button.attack2').click(function(){
+        //         console.log('clicked')
+        //         $('button.action2').hide();
+        //         $('#choices2').hide();
+        //     });
+
+        //     $('button.move2').click(function(){
+        //         console.log('clicked')
+        //         $('button.action2').hide();
+        //         $('#choices2').hide();
+        //     });
+
+        //     $('button.rest2').click(function(){
+        //         console.log('clicked')
+        //         $('button.action2').hide();
+        //         $('#choices2').hide();
+        //     });
+
+        // });
+
         var map = {{map | safe}}
+
+        var characters = {{orderedPlayers | safe}}
+        var totalCharacters = 0;
+
         console.log(map)
 
         function displayWorld(){
@@ -300,80 +374,174 @@
         }
         displayWorld()
 
-
-
-
-        var player = {{orderedPlayers.Tim | safe}}
-        console.log(player) 
-
-
-        $(document).keydown(function(e) {
+        function movePlayer(currentPlayer){
+            var moved = 0
+            player = characters[currentPlayer]
+            
             // console.log(player)
-            // console.log(map)
+            console.log('start moving')
+            $(document).keydown(function(e) {
+                // console.log(player)
+                // console.log(map)
 
-            if(e.keyCode == 37) { // LEFT
-                console.log('starting left')
-                if(player['position']['x']-1 >=0){
-                    if((map[player['position']['y']][player['position']['x']-1][1] == "") & (map[player['position']['y']][player['position']['x']-1][0] > 9)){
-                        console.log(map[player['position']['y']][player['position']['x']])
-                        map[player['position']['y']][player['position']['x']][1] = ""
-                        player['position']['x'] --;
-                        map[player['position']['y']][player['position']['x']][1] = "Tim"
-                        console.log("triggered left")
-                        console.log(player['position']['x'])
+                if(moved <player.movementSpeed){
+                    console.log(moved)
+                    console.log(player.movementSpeed)
+                    
+
+                    if(e.keyCode == 37) { // LEFT
+                        // console.log('starting left')
+                        if(player['position']['x']-1 >=0){
+                            if((map[player['position']['y']][player['position']['x']-1][1] == "") & (map[player['position']['y']][player['position']['x']-1][0] > 9)){
+                                // console.log(map[player['position']['y']][player['position']['x']])
+                                map[player['position']['y']][player['position']['x']][1] = ""
+                                player['position']['x'] --;
+                                map[player['position']['y']][player['position']['x']][1] = currentPlayer
+                                console.log("triggered left")
+                                // console.log(player['position']['x'])
+
+                                moved++
+
+                            }
+                        }
+
+                    }
+                    else if(e.keyCode == 38){ // UP
+                        if(player['position']['y']-1 >=0){
+                            if((map[player['position']['y']-1][player['position']['x']][1] == "")  & (map[player['position']['y']-1][player['position']['x']][0] > 9)){
+                                map[player['position']['y']][player['position']['x']][1] = ""
+                                player['position']['y'] --;
+                                map[player['position']['y']][player['position']['x']][1] = currentPlayer
+
+                                console.log("triggered up")
+                                // console.log(player['position']['y'])
+                                
+                                moved++
+
+                            }
+                        }
+
+                    }
+                    else if (e.keyCode == 39) { // RIGHT
+                        if(player['position']['x']+1 <=map[0].length-1){
+                            // console.log(map[0].length-1)
+                            if((map[player['position']['y']][player['position']['x']+1][1] == "")  & (map[player['position']['y']][player['position']['x']+1][0] > 9)){
+                                map[player['position']['y']][player['position']['x']][1] = ""
+                                player['position']['x'] ++;
+                                map[player['position']['y']][player['position']['x']][1] = currentPlayer	
+
+                                console.log("triggered right")
+                                // console.log(player['position']['x'])
+                                
+                                moved++
+
+                            }
+                        }
+
+                    }
+                    else if (e.keyCode == 40) { // DOWN
+                        if(player['position']['y']+1 <= map.length-1){
+                            // console.log(map.length-1)
+
+                            if((map[player['position']['y']+1][player['position']['x']][1] == "")  & (map[player['position']['y']+1][player['position']['x']][0] > 9)){
+                                map[player['position']['y']][player['position']['x']][1] = ""
+                                player['position']['y'] ++;
+                                map[player['position']['y']][player['position']['x']][1] = currentPlayer
+
+                                console.log("triggered down")
+                                // console.log(player['position']['y'])
+
+                                // console.log("new change")
+                                
+                                moved++
+
+                            }
+                        }
+
                     }
                 }
-
-            }
-            else if(e.keyCode == 38){ // UP
-                if(player['position']['y']-1 >=0){
-                    if((map[player['position']['y']-1][player['position']['x']][1] == "")  & (map[player['position']['y']-1][player['position']['x']][0] > 9)){
-                        map[player['position']['y']][player['position']['x']][1] = ""
-                        player['position']['y'] --;
-                        map[player['position']['y']][player['position']['x']][1] = "Tim"
-
-                        console.log("triggered up")
-                        console.log(player['position']['y'])
-                    }
+                if(moved <player.movementSpeed){
+                    console.log('performed step')
+                } else{
+                    console.log('performed step')
+                    console.log('movements completed')
                 }
+                displayWorld()
+            });
 
-            }
-            else if (e.keyCode == 39) { // RIGHT
-                if(player['position']['x']+1 <=map[0].length-1){
-                    console.log(map[0].length-1)
-                    if((map[player['position']['y']][player['position']['x']+1][1] == "")  & (map[player['position']['y']][player['position']['x']+1][0] > 9)){
-                        map[player['position']['y']][player['position']['x']][1] = ""
-                        player['position']['x'] ++;
-                        map[player['position']['y']][player['position']['x']][1] = "Tim"	
 
-                        console.log("triggered right")
-                        console.log(player['position']['x'])
-                    }
-                }
+        }
 
-            }
-            else if (e.keyCode == 40) { // DOWN
-                if(player['position']['y']+1 <= map.length-1){
-                    console.log(map.length-1)
 
-                    if((map[player['position']['y']+1][player['position']['x']][1] == "")  & (map[player['position']['y']+1][player['position']['x']][0] > 9)){
-                        map[player['position']['y']][player['position']['x']][1] = ""
-                        player['position']['y'] ++;
-                        map[player['position']['y']][player['position']['x']][1] = "Tim"
+        $(document).ready(function(){
+            $('button.action1').click(function(){
+                console.log('clicked')
+                $('#choices1').toggle();
+                $('#choices2').hide();
+            });
 
-                        console.log("triggered down")
-                        console.log(player['position']['y'])
+            $('button.action2').click(function(){
+                console.log('clicked')
+                $('#choices2').toggle();
+                $('#choices1').hide();
+            });
 
-                        console.log("new change")
-                    }
-                }
+            $('button.attack1').click(function(){
+                console.log('clicked')
+                $('button.action1').hide();
+                $('#choices1').hide();
+            });
 
-            }
+            $('button.move1').click(function(){
+                console.log('clicked')
+                $('button.action1').hide();
+                $('#choices1').hide();
+                movePlayer("Tim")
+            });
 
-            displayWorld()
+            $('button.rest1').click(function(){
+                console.log('clicked')
+                $('button.action1').hide();
+                $('#choices1').hide();
+            });
+
+            $('button.attack2').click(function(){
+                console.log('clicked')
+                $('button.action2').hide();
+                $('#choices2').hide();
+            });
+
+            $('button.move2').click(function(){
+                console.log('clicked')
+                $('button.action2').hide();
+                $('#choices2').hide();
+                movePlayer("Kimmy")
+            });
+
+            $('button.rest2').click(function(){
+                console.log('clicked')
+                $('button.action2').hide();
+                $('#choices2').hide();
+            });
+
         });
 
+        // movePlayer('Tim')
 
+        // movePlayer('Tim')
+  
+        // for (var key in characters){
+        //     console.log(key)
+        //     totalCharacters ++
+        //     console.log(totalCharacters)
+        // }
+
+        // if(totalCharacters >1){
+        //     for(var currentCharacter in characters){
+        //         console.log(currentCharacter)
+        //         movePlayer('Tim')
+        //     }
+        // }
 
 
         
