@@ -9,14 +9,16 @@
 
     <title>"Game Name"</title>
 
+    {% load static %}
+
     <!-- Bootstrap core CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="starter-template.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'game/css/gameStyle.css' %}" />
+
+
     <script
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -24,110 +26,241 @@
     </script>
 
     <style>
-        .wall{
-            width: 10px;
-            height: 10px;
-            background-color: grey;
+        .tile{
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 10%;
+            height: 60px;
             margin: 0px;
+            padding-bottom: 10%;
         }
-        .water{
-            width: 10px;
-            height: 10px;
-            background-color: lightblue;
+        .playerTile{
+            background-color: red;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 10%;
+            height: 60px;
             margin: 0px;
-
+            padding-bottom: 10%;
         }
 
     </style>
-    
-    
+
+
+
+    <style>
+        *{
+            /* outline: 1px dotted red; */
+            font-family: MedievalSharp;
+        }
+
+        body{
+            background-color: #6c2505;
+            background-size: 40px 160px, 60px 29px, 27px 27px;
+            background-image: linear-gradient(90deg, #551c07 50%, transparent 50%),
+                linear-gradient(94deg, rgba(91,33,5,.1) 0%,rgba(83,29,4,0.32) 23%,rgba(74,24,3,.41) 47%,rgba(80,27,5,0.44) 70%,rgba(81,27,5,0.59) 74%,rgba(93,33,4,0.2) 83%,rgba(115,43,3,.5) 100%),
+                linear-gradient(90deg, #541c09 50%, transparent 50%),
+                linear-gradient(90deg, #7a2e00 50%, #632401 50%);
+
+        }
+
+        h1 {
+            font-family: MedievalSharp;
+            font-size: 24px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 500;
+            line-height: 26.4px;
+        }
+        h3 {
+            font-family: MedievalSharp;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 500;
+            line-height: 15.4px;
+        }
+        p {
+            font-family: MedievalSharp;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        main{
+            /* background-color: #797746; */
+            padding: 20px 0px;
+            width:100%;
+        }
+        .playerStats{
+            display: inline-block;
+            width: 20%;
+            height: auto;
+            background-color: #959490;
+            vertical-align: top;
+            border-radius: 5px;
+            box-shadow: 2px 2px 2px black;
+        }
+
+        /* .personalPlayerStats{
+            display: inline-block;
+            width: 25%;
+            height: auto;
+            background-color: grey;
+            vertical-align: top;
+        } */
+        .middle{
+            display: inline-block;
+            width: 49%;
+            height: 200px;
+            background-size: contain;
+            vertical-align: top;
+ 
+        }
+        .board{
+            width:75%;
+            border: 5px outset;
+            border-radius: 5px;
+        }
+        .cardHand{
+            width: 99%;
+            margin: auto;
+            height: 200px;
+            padding: 10px 0px;
+        }
+        .card{
+            width:30%;
+            height:100px;
+            text-align: center;   
+            display: inline-block;
+            background-color:  rgba(139,69,19,.8);    
+        }
+        .temp{
+            color: white;
+        }
+
+
+        .pic{
+            background-color: red;
+            width: 20px;
+            height: 20px;
+            float:right;
+            
+        }
+
+    </style>
 
   </head>
+
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand">Link List</a>      
+        <a class="navbar-brand">Link List</a>
+
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button> -->
+      
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <!-- <li class="nav-item active">
                     <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                 </li> -->
+
                 <li class="nav-item">
                     <a class="nav-link" href="/game/how_to_play" target="_blank" >How To Play</a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="/game/characters" target="_blank" >Character Wiki</a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="/game/enemies" target="_blank">Enemy Wiki</a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="/game/items" target="_blank">Item Wiki</a>
                 </li>
+    
             </ul>
         </div>
     </nav>
+
     <main role="main" class="container-fluid">
         <div class="container playerStats">
             <h2>All Player Stats</h2>
-                <ul>
-                    <li>TempName {{name}} - TempCharacter{{character}}</li>
-                        <ul><li>Health - 4</li></ul>
-                    <li>Timmy Toe - Knight</li>
-                        <ul><li>Health - 4</li></ul>
-                    <li>Kimmy Koe - Cleric</li> 
-                        <ul><li>Health - 4</li></ul>
-                    <li>John  Doe - Mage</li>
-                        <ul><li>Health - 4</li></ul>
-                    {{characterList | safe}}
-                </ul>
+            
+
+            <ul>
+                {% for player, value in request.session.stats.items %}
+                        <li>{{player}} - {{value.name}} </li>
+                        <ul><li>Health - {{value.health}}</li></ul>
+                {% endfor %}
+            </ul>
+
+
         </div>
-        <div id='playerMap'></div>
+
+
+        <div class='middle'>
+            <!-- <p class='temp'>{{request.session.stats}}</p> -->
+            <!-- <img src='static/game/img/exampleMap.jpg' alt="Main Board" class = 'board'> -->
+
+            <div id='playerMap'></div>
+
+        </div>
         
+
         <div class="container playerStats">
             <h2>Personal Player Stats</h2>
-            <li>Health - {{characterHealth}}</li>
-            <li>Energy Level - {{characterEnergy}}</li>
-            <li>Status - {{characterStatus}}</li> 
-            <li>Items:</li>
-            <ul>
-                {{characterItems | safe}}
-            </ul>
-            <div class="container cardHand">
-                <div class="card"><h1>7</h1></div>
-                <div class="card"><h1>7</h1></div>
-                <div class="card"><h1>7</h1></div>
-                {{characterCards | safe}}
-            </div>
+
+            {% for player, value in request.session.stats.items %}
+                {% if player == name %}
+                    <li>Health - {{value.health}}</li>
+                    <li>Energy Level - {{value.energyLevel}}</li>
+                    <li>Status - {{value.status}}</li> 
+                    <li>Items:</li>
+                    <ul>
+                        <li>Weapon: {{value.items.weapon.name}}</li>
+                        <li>Head Armor: {{value.items.headArmor.name}}</li>
+                        <li>Body Armor: {{value.items.bodyArmor.name}}</li>
+                        <li>Leg Armor: {{value.items.legArmor.name}}</li>
+                    </ul>
+
+                    <div class="container cardHnd">
+                        <div class="card"><h1>{{value.cards.card1}}</h1></div>
+                        <div class="card"><h1>{{value.cards.card2}}</h1></div>
+                        <div class="card"><h1>{{value.cards.card3}}</h1></div>
+
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
+
+
+
     </main><!-- /.container -->
 
 
     <script>
 
-        var map = [
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
-            [0,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,0],
-            [0,2,1,2,2,1,2,2,1,2,1,2,2,1,2,2,1,2,0],
-            [0,2,1,2,2,1,2,2,1,2,1,2,2,1,2,2,1,2,0],
-            [0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0],
-            [0,2,1,2,2,1,2,1,2,2,2,1,2,1,2,2,1,2,0],
-            [0,2,1,1,1,1,2,1,1,2,1,1,2,1,1,1,1,2,0],
-            [0,2,2,2,2,1,2,2,1,1,1,2,2,1,2,2,2,2,0],
-            [2,2,2,2,2,1,2,1,1,2,1,1,2,1,2,2,2,2,2],
-            [0,0,0,0,0,1,1,1,2,1,2,1,1,1,0,0,0,0,0],
-            [2,2,2,2,2,1,2,1,1,1,1,1,2,1,2,2,2,2,2],
-            [0,2,2,2,2,1,2,1,2,2,2,1,2,1,2,2,2,2,0],
-            [0,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,2,0],
-            [0,2,1,2,2,1,2,2,1,0,1,2,2,1,2,2,1,2,0],
-            [0,2,1,1,2,1,1,1,1,0,1,1,1,1,2,1,1,2,0],
-            [0,2,2,1,2,1,2,1,2,2,2,1,2,1,2,1,2,2,0],
-            [0,2,1,1,1,1,2,1,1,2,1,1,2,1,1,1,1,2,0],
-            [0,2,1,2,2,2,2,2,1,2,1,2,2,2,2,2,1,2,0],
-            [0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0],
-            [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
-            [0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-        ];
+        // var map = [
+        //     [0,0,0,0,0,0,0,0,0,0],
+        //     [0,2,2,2,2,2,2,2,2,2],
+        //     [0,2,1,1,1,1,1,1,1,2],
+        //     [0,2,1,2,2,1,2,2,1,2],
+        //     [0,2,1,2,2,1,2,2,1,2],
+        //     [0,2,1,1,1,1,1,1,1,1],
+        //     [0,2,1,2,2,1,2,1,2,2],
+        //     [0,2,1,1,1,1,2,1,1,2],
+        //     [0,2,2,2,2,1,2,2,1,1],
+        //     [2,2,2,2,2,1,2,1,1,2],
+            
+        // ];
 
         // var map = [
         //     [0,0,0,0],
@@ -135,6 +268,8 @@
         //     [0,1,1,0],
         //     [0,0,0,0],
         // ]
+
+        var map = {{map}}
 
         console.log(map)
 
@@ -144,11 +279,15 @@
             var tileDict = {
                 0: 'wall',
                 1: 'water',
-                2: 'wall',
-                3: 'lamppost',
+                2: 'grassWater_front',
+                3: 'wall',
+                4: 'wall_bottom',
+                5: 'lamppost',
                 10: 'grass',
-                11: 'castlefloor',
-                12: 'ladder',
+                11: 'stone_floor',
+                12: 'ladder_bottom',
+                13: 'ladder',
+                14: 'ladder_top',
                 30: 'door'
             }
             // print("I'm here!!")
@@ -157,18 +296,29 @@
             for(var i=0; i<map.length; i++){
                 output = output += "<div class='row'>";
                 for(var j=0; j<map[i].length; j++){
-                    output = output += "<div class='" + tileDict[map[i][j]] + "'></div>";
+
+                    if(map[i][j][1]==0){
+                        output = output += "<div class='tile' style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
+                        // console.log('player found')
+                    }else{
+                        var playerName = map[i][j][1];
+                        characterType = {{ request.session.stats.playerName.name }}
+                        output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/" + tileDict[map[i][j][0]] +".png'), url('/static/game/img/" + characterType +".png')\"></div>";
+                    }
                 }
                 output += "</div>";
             }
-            console.log('output')
-            console.log(output);
-            document.getElementById('playerMap').innerHTML = output +  "<h1>hello world</h1>";
+            // console.log('output')
+            // console.log(output);
+            document.getElementById('playerMap').innerHTML = output;
         }
         displayWorld()
+
+        function displayCharacter(){
+
+        }
         
     </script>
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

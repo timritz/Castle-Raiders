@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>"Game Name"</title>
+
+    {% load static %}
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+    <!-- <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+    </script> -->
+
+    <style>
+        .tile{
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: white;
+            width: 10%;
+            height: 60px;
+            margin: 0px;
+            padding-bottom: 10%;
+        }
+        .playerTile{
+            background-color: red;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 10%;
+            height: 60px;
+            margin: 0px;
+            padding-bottom: 10%;
+        }
+
+    </style>
+
+
+
+    <style>
+        *{
+            /* outline: 1px dotted red; */
+            font-family: MedievalSharp;
+        }
+
+        body{
+            background-color: #6c2505;
+            background-size: 40px 160px, 60px 29px, 27px 27px;
+            background-image: linear-gradient(90deg, #551c07 50%, transparent 50%),
+                linear-gradient(94deg, rgba(91,33,5,.1) 0%,rgba(83,29,4,0.32) 23%,rgba(74,24,3,.41) 47%,rgba(80,27,5,0.44) 70%,rgba(81,27,5,0.59) 74%,rgba(93,33,4,0.2) 83%,rgba(115,43,3,.5) 100%),
+                linear-gradient(90deg, #541c09 50%, transparent 50%),
+                linear-gradient(90deg, #7a2e00 50%, #632401 50%);
+
+        }
+
+        h1 {
+            font-family: MedievalSharp;
+            font-size: 24px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 500;
+            line-height: 26.4px;
+        }
+        h3 {
+            font-family: MedievalSharp;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 500;
+            line-height: 15.4px;
+        }
+        p {
+            font-family: MedievalSharp;
+            font-size: 14px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 400;
+            line-height: 20px;
+        }
+
+        main{
+            /* background-color: #797746; */
+            padding: 20px 0px;
+            width:100%;
+        }
+        .playerStats{
+            display: inline-block;
+            width: 20%;
+            height: auto;
+            background-color: inherit;
+            background-image: url('/static/game/img/scroll.png');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            vertical-align: top;
+            border-radius: 5px;
+            /* box-shadow: 2px 2px 2px black; */
+            padding: 6% 3%;
+            margin: 1% 
+        }
+
+        /* .personalPlayerStats{
+            display: inline-block;
+            width: 25%;
+            height: auto;
+            background-color: grey;
+            vertical-align: top;
+        } */
+        .middle{
+            display: inline-block;
+            width: 49%;
+            height: 200px;
+            background-size: contain;
+            vertical-align: top;
+ 
+        }
+        .board{
+            width:75%;
+            border: 5px outset;
+            border-radius: 5px;
+        }
+        .cardHand{
+            width: 99%;
+            margin: auto;
+            height: 200px;
+            padding: 10px 0px;
+        }
+        .card{
+            width:30%;
+            padding-bottom:10%;
+            text-align: center;   
+            display: inline-block;
+            background-color:  rgba(139,69,19,.8);    
+        }
+        .temp{
+            color: white;
+        }
+
+
+        .pic{
+            background-color: red;
+            width: 20px;
+            height: 20px;
+            float:right;
+            
+        }
+
+    </style>
+
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand">Link List</a>
+
+        <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button> -->
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!-- <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li> -->
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/how_to_play" target="_blank" >How To Play</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/characters" target="_blank" >Character Wiki</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/enemies" target="_blank">Enemy Wiki</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/game/items" target="_blank">Item Wiki</a>
+                </li>
+    
+            </ul>
+        </div>
+    </nav>
+
+    <main role="main" class="container-fluid">
+        <div class="container playerStats">
+            <h2>All Player Stats</h2>
+            
+
+            <ul>
+                {% for player, value in request.session.stats.items %}
+                        <li>{{player}} - {{value.name}} </li>
+                        <ul><li>Health - {{value.health}}</li></ul>
+                {% endfor %}
+            </ul>
+
+
+        </div>
+
+
+        <div class='middle'>
+            <!-- <p class='temp'>{{request.session.stats}}</p> -->
+            <!-- <img src='static/game/img/exampleMap.jpg' alt="Main Board" class = 'board'> -->
+
+            <div id='playerMap'></div>
+
+        </div>
+        
+
+        <div class="container playerStats">
+            <h2>Personal Player Stats</h2>
+
+            {% for player, value in request.session.stats.items %}
+                {% if player == name %}
+                    <li>Health - {{value.health}}</li>
+                    <li>Energy Level - {{value.energyLevel}}</li>
+                    <li>Status - {{value.status}}</li> 
+                    <li>Items:</li>
+                    <ul>
+                        <li>Weapon: {{value.items.weapon.name}}</li>
+                        <li>Head Armor: {{value.items.headArmor.name}}</li>
+                        <li>Body Armor: {{value.items.bodyArmor.name}}</li>
+                        <li>Leg Armor: {{value.items.legArmor.name}}</li>
+                    </ul>
+
+                    <div class="container cardHnd">
+                        <div class="card"><h1>{{value.cards.card1}}</h1></div>
+                        <button class="card action1"><h1>{{value.cards.card2}}</h1></button>
+                        <button class="card action2"><h1>{{value.cards.card3}}</h1></button>
+
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <div id='choices1' style="display: none">
+                <button class='attack1'>Attack</button>
+                <button class='move1'>Move</button>
+                <button class='rest1'>Rest</button>
+
+            </div>
+            <div id='choices2' style="display: none">
+                <button class='attack2'>Attack</button>
+                <button class='move2'>Move</button>
+                <button class='rest2'>Rest</button>
+            </div>
+        </div>
+
+
+
+    </main><!-- /.container -->
+
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+
+
+    <script>
+
+        // $(document).ready(function(){
+        //     $('button.action1').click(function(){
+        //         console.log('clicked')
+        //         $('#choices1').toggle();
+        //         $('#choices2').hide();
+        //     });
+
+        //     $('button.action2').click(function(){
+        //         console.log('clicked')
+        //         $('#choices2').toggle();
+        //         $('#choices1').hide();
+        //     });
+
+        //     $('button.attack1').click(function(){
+        //         console.log('clicked')
+        //         $('button.action1').hide();
+        //         $('#choices1').hide();
+        //     });
+
+        //     $('button.move1').click(function(){
+        //         console.log('clicked')
+        //         $('button.action1').hide();
+        //         $('#choices1').hide();
+        //     });
+
+        //     $('button.rest1').click(function(){
+        //         console.log('clicked')
+        //         $('button.action1').hide();
+        //         $('#choices1').hide();
+        //     });
+
+        //     $('button.attack2').click(function(){
+        //         console.log('clicked')
+        //         $('button.action2').hide();
+        //         $('#choices2').hide();
+        //     });
+
+        //     $('button.move2').click(function(){
+        //         console.log('clicked')
+        //         $('button.action2').hide();
+        //         $('#choices2').hide();
+        //     });
+
+        //     $('button.rest2').click(function(){
+        //         console.log('clicked')
+        //         $('button.action2').hide();
+        //         $('#choices2').hide();
+        //     });
+
+        // });
+
+        var map = {{map | safe}}
+
+        var characters = {{orderedPlayers | safe}}
+        var totalCharacters = 0;
+
+        console.log(map)
+
+        function displayWorld(){
+            var output = '';
+            var tileDict = {
+                0: 'wall',
+                1: 'water',
+                2: 'grassWater_front',
+                3: 'wall',
+                4: 'wall_bottom',
+                5: 'lamppost',
+                10: 'grass',
+                11: 'stone_floor',
+                12: 'ladder_bottom',
+                13: 'ladder',
+                14: 'ladder_top',
+                30: 'door'
+            }
+            // print("I'm here!!")
+
+            var output = ""
+            for(var i=0; i<map.length; i++){
+                output = output += "<div class='row'>";
+                for(var j=0; j<map[i].length; j++){
+
+                    if(map[i][j][1]==""){
+                        output = output += "<div class='tile' style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
+                        // console.log('player found')
+                    }else{
+                        output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/knight-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
+                    }
+                }
+                output += "</div>";
+            }
+            // console.log('output')
+            // console.log(output);
+            document.getElementById('playerMap').innerHTML = output;
+        }
+        displayWorld()
+
+        function movePlayer(currentPlayer){
+            var moved = 0
+            player = characters[currentPlayer]
+            
+            // console.log(player)
+            console.log('start moving')
+            $(document).keydown(function(e) {
+                // console.log(player)
+                // console.log(map)
+
+                if(moved <player.movementSpeed){
+                    console.log(moved)
+                    console.log(player.movementSpeed)
+                    
+
+                    if(e.keyCode == 37) { // LEFT
+                        // console.log('starting left')
+                        if(player['position']['x']-1 >=0){
+                            if((map[player['position']['y']][player['position']['x']-1][1] == "") & (map[player['position']['y']][player['position']['x']-1][0] > 9)){
+                                // console.log(map[player['position']['y']][player['position']['x']])
+                                map[player['position']['y']][player['position']['x']][1] = ""
+                                player['position']['x'] --;
+                                map[player['position']['y']][player['position']['x']][1] = currentPlayer
+                                console.log("triggered left")
+                                // console.log(player['position']['x'])
+
+                                moved++
+
+                            }
+                        }
+
+                    }
+                    else if(e.keyCode == 38){ // UP
+                        if(player['position']['y']-1 >=0){
+                            if((map[player['position']['y']-1][player['position']['x']][1] == "")  & (map[player['position']['y']-1][player['position']['x']][0] > 9)){
+                                map[player['position']['y']][player['position']['x']][1] = ""
+                                player['position']['y'] --;
+                                map[player['position']['y']][player['position']['x']][1] = currentPlayer
+
+                                console.log("triggered up")
+                                // console.log(player['position']['y'])
+                                
+                                moved++
+
+                            }
+                        }
+
+                    }
+                    else if (e.keyCode == 39) { // RIGHT
+                        if(player['position']['x']+1 <=map[0].length-1){
+                            // console.log(map[0].length-1)
+                            if((map[player['position']['y']][player['position']['x']+1][1] == "")  & (map[player['position']['y']][player['position']['x']+1][0] > 9)){
+                                map[player['position']['y']][player['position']['x']][1] = ""
+                                player['position']['x'] ++;
+                                map[player['position']['y']][player['position']['x']][1] = currentPlayer	
+
+                                console.log("triggered right")
+                                // console.log(player['position']['x'])
+                                
+                                moved++
+
+                            }
+                        }
+
+                    }
+                    else if (e.keyCode == 40) { // DOWN
+                        if(player['position']['y']+1 <= map.length-1){
+                            // console.log(map.length-1)
+
+                            if((map[player['position']['y']+1][player['position']['x']][1] == "")  & (map[player['position']['y']+1][player['position']['x']][0] > 9)){
+                                map[player['position']['y']][player['position']['x']][1] = ""
+                                player['position']['y'] ++;
+                                map[player['position']['y']][player['position']['x']][1] = currentPlayer
+
+                                console.log("triggered down")
+                                // console.log(player['position']['y'])
+
+                                // console.log("new change")
+                                
+                                moved++
+
+                            }
+                        }
+
+                    }
+                }
+                if(moved <player.movementSpeed){
+                    console.log('performed step')
+                } else{
+                    console.log('performed step')
+                    console.log('movements completed')
+                }
+                displayWorld()
+            });
+
+
+        }
+
+
+        $(document).ready(function(){
+            $('button.action1').click(function(){
+                console.log('clicked')
+                $('#choices1').toggle();
+                $('#choices2').hide();
+            });
+
+            $('button.action2').click(function(){
+                console.log('clicked')
+                $('#choices2').toggle();
+                $('#choices1').hide();
+            });
+
+            $('button.attack1').click(function(){
+                console.log('clicked')
+                $('button.action1').hide();
+                $('#choices1').hide();
+            });
+
+            $('button.move1').click(function(){
+                console.log('clicked')
+                $('button.action1').hide();
+                $('#choices1').hide();
+                movePlayer("Tim")
+            });
+
+            $('button.rest1').click(function(){
+                console.log('clicked')
+                $('button.action1').hide();
+                $('#choices1').hide();
+            });
+
+            $('button.attack2').click(function(){
+                console.log('clicked')
+                $('button.action2').hide();
+                $('#choices2').hide();
+            });
+
+            $('button.move2').click(function(){
+                console.log('clicked')
+                $('button.action2').hide();
+                $('#choices2').hide();
+                movePlayer("Kimmy")
+            });
+
+            $('button.rest2').click(function(){
+                console.log('clicked')
+                $('button.action2').hide();
+                $('#choices2').hide();
+            });
+
+        });
+
+        // movePlayer('Tim')
+
+        // movePlayer('Tim')
+  
+        // for (var key in characters){
+        //     console.log(key)
+        //     totalCharacters ++
+        //     console.log(totalCharacters)
+        // }
+
+        // if(totalCharacters >1){
+        //     for(var currentCharacter in characters){
+        //         console.log(currentCharacter)
+        //         movePlayer('Tim')
+        //     }
+        // }
+
+
+        
+        
+    </script>
+
+
+  </body>
+</html>
