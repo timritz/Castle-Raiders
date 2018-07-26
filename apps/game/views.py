@@ -8,7 +8,7 @@ def index(request,name):
     context={
         # 'players': submittedPlayerList,
         'orderedPlayers': request.session['orderedPlayerDict'],
-        'name': str(name),
+        'name': name,
         'map': request.session['map']
     }
 
@@ -125,6 +125,7 @@ def prep_game(request, name):
 
             positions = {
                 '1': [0, 0],
+                # '2': [1, 0],
                 '2': [len(map[0]) - 1, 0],
                 '3': [0, len(map) - 1],
                 '4': [len(map[0]) - 1, len(map) - 1]
@@ -154,6 +155,7 @@ def prep_game(request, name):
 
         positions = {
             '1': [0, 0],
+            # '2': [1, 0],
             '2': [len(map[0]) - 1, 0],
             '3': [0, len(map) - 1],
             '4': [len(map[0]) - 1, len(map) - 1]

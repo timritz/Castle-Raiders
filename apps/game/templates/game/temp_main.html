@@ -38,7 +38,6 @@
             padding-bottom: 10%;
         }
         .playerTile{
-            background-color: red;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -47,7 +46,9 @@
             margin: 0px;
             padding-bottom: 10%;
         }
-
+        .highlighted{
+            box-shadow: inset 0 0 0 1000px rgba(248, 2, 2, .25);
+        }
     </style>
 
 
@@ -277,62 +278,12 @@
 
 
     <script>
-
-        // $(document).ready(function(){
-        //     $('button.action1').click(function(){
-        //         console.log('clicked')
-        //         $('#choices1').toggle();
-        //         $('#choices2').hide();
-        //     });
-
-        //     $('button.action2').click(function(){
-        //         console.log('clicked')
-        //         $('#choices2').toggle();
-        //         $('#choices1').hide();
-        //     });
-
-        //     $('button.attack1').click(function(){
-        //         console.log('clicked')
-        //         $('button.action1').hide();
-        //         $('#choices1').hide();
-        //     });
-
-        //     $('button.move1').click(function(){
-        //         console.log('clicked')
-        //         $('button.action1').hide();
-        //         $('#choices1').hide();
-        //     });
-
-        //     $('button.rest1').click(function(){
-        //         console.log('clicked')
-        //         $('button.action1').hide();
-        //         $('#choices1').hide();
-        //     });
-
-        //     $('button.attack2').click(function(){
-        //         console.log('clicked')
-        //         $('button.action2').hide();
-        //         $('#choices2').hide();
-        //     });
-
-        //     $('button.move2').click(function(){
-        //         console.log('clicked')
-        //         $('button.action2').hide();
-        //         $('#choices2').hide();
-        //     });
-
-        //     $('button.rest2').click(function(){
-        //         console.log('clicked')
-        //         $('button.action2').hide();
-        //         $('#choices2').hide();
-        //     });
-
-        // });
-
         var map = {{map | safe}}
 
         var characters = {{orderedPlayers | safe}}
         var totalCharacters = 0;
+
+        var name = "{{name}}"
 
         console.log(map)
 
@@ -363,7 +314,7 @@
                         output = output += "<div class='tile' style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
                         // console.log('player found')
                     }else{
-                        output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/knight-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
+                        output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/" + characters[map[i][j][1]]['name'] + "-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
                     }
                 }
                 output += "</div>";
@@ -372,10 +323,72 @@
             // console.log(output);
             document.getElementById('playerMap').innerHTML = output;
         }
+        
         displayWorld()
+
+        function displayHighlightedWorld(name){
+            var centerX = characters[name]['position']['x']
+            var centerY = characters[name]['position']['y']
+
+            console.log(centerX)
+            console.log(centerY)
+            
+
+            var output = '';
+            var tileDict = {
+                0: 'wall',
+                1: 'water',
+                2: 'grassWater_front',
+                3: 'wall',
+                4: 'wall_bottom',
+                5: 'lamppost',
+                10: 'grass',
+                11: 'stone_floor',
+                12: 'ladder_bottom',
+                13: 'ladder',
+                14: 'ladder_top',
+                30: 'door'
+            }
+            // print("I'm here!!")
+
+            var output = ""
+            for(var i=0; i<map.length; i++){
+                output = output += "<div class='row'>";
+                for(var j=0; j<map[i].length; j++){
+
+
+                    if((j-centerX <= 1) & (i-centerY <= 1) & (j-centerX >= -1) & (i-centerY >= -1) &!((j-centerX ==0)& (i-centerY == 0))){
+                        console.log('highlighted')
+                        console.log("X diff: ", (j-centerX))
+                        console.log("Y diff: ", (i-centerY))
+
+                        if(map[i][j][1]==""){
+                            output = output += "<div class='tile highlighted' data-position='" + i + "-" + j + "' " + "style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
+                        }else{
+                            output = output += "<div class='playerTile highlighted' data-position='" + i + "-" + j + "' " + "style=\"background-image:url('/static/game/img/knight-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
+                        }
+                    }else{
+                        if(map[i][j][1]==""){
+                            output = output += "<div class='tile' data-position='" + i + "-" + j + "' " + "style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
+                            // console.log('player found')
+                        }else{
+                            output = output += "<div class='playerTile' data-position='" + i + "-" + j + "' " + "style=\"background-image:url('/static/game/img/" + characters[map[i][j][1]]['name'] + "-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
+                        }
+                    }
+                }
+                output += "</div>";
+            }
+            // console.log('output')
+            // console.log(output);
+            document.getElementById('playerMap').innerHTML = output;
+        }
+
+        // displayHighlightedWorld()
 
         function movePlayer(currentPlayer){
             var moved = 0
+
+            console.log(currentPlayer)
             player = characters[currentPlayer]
             
             // console.log(player)
@@ -490,13 +503,21 @@
                 console.log('clicked')
                 $('button.action1').hide();
                 $('#choices1').hide();
+                displayHighlightedWorld(name)
+                $('div.highlighted').click(function(){
+                    console.log('clicked')
+                    console.log($(this).attr('data-position'))
+                    var position = $(this).attr('data-position')
+                    // name = name
+                    var card = "card1"
+                });
             });
 
             $('button.move1').click(function(){
                 console.log('clicked')
                 $('button.action1').hide();
                 $('#choices1').hide();
-                movePlayer("Tim")
+                movePlayer(name)
             });
 
             $('button.rest1').click(function(){
@@ -509,13 +530,21 @@
                 console.log('clicked')
                 $('button.action2').hide();
                 $('#choices2').hide();
+                displayHighlightedWorld(name)
+                $('div.highlighted').click(function(){
+                    console.log('clicked')
+                    console.log($(this).attr('data-position'))
+                    var position = $(this).attr('data-position')
+                    // name = name
+                    var card = "card1"
+                });
             });
 
             $('button.move2').click(function(){
                 console.log('clicked')
                 $('button.action2').hide();
                 $('#choices2').hide();
-                movePlayer("Kimmy")
+                movePlayer(name)
             });
 
             $('button.rest2').click(function(){
