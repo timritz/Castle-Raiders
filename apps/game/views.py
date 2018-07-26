@@ -18,14 +18,6 @@ def index(request,name):
 
 
 
-def get_player_char(request, plyrName):
-    playerName = str(plyrName)
-    print("!"*60)
-    print(playerName)
-    playerChar = str(request.session['orderedPlayerDict'][plyrName]['name'])
-    print(playerChar)
-    return HttpResponse(playerChar)
-
 def serveCards(request, player):
     player.assignCards()
     return True
@@ -43,14 +35,7 @@ def fight(request, attackingPlayer, effectidx, cardNum):
     # Will take in the player who is fighting, the character who is being fought
     # Will take in their attack, defense including cards and run the initial numbers
     # Will use those numbers to calculate the results, then update orderedDict and return the result
-        return HttpResponse(response)
-
-def metaGame(request):
-    while(request.session['playerCount'] > 1):
-        next(runGame())
-    winner = Player.objects.filter(livingStatus='alive').first()
-    request.session['winner'] = winner
-    return template(request, 'chicken_dinner.html')    
+        return HttpResponse(response)  
 
 
 def runGame(request):
