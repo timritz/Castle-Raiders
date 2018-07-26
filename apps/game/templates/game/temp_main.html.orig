@@ -283,13 +283,7 @@
         var totalCharacters = 0;
 
         var name = "{{name}}"
-        var myVar = setInterval(loadMap, 3000);
 
-        function loadMap() {
-            var d = new Date();
-            document.getElementById("demo").innerHTML = d.toLocaleTimeString();
-        }
-        
         console.log(map)
 
         function displayWorld(){
