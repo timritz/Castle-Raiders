@@ -21,9 +21,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
     <script
-    src="https://code.jquery.com/jquery-2.2.4.min.js"
-    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-    crossorigin="anonymous"></script>
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
 
     <style>
         .tile{
@@ -136,15 +136,55 @@
         .cardHand{
             width: 99%;
             margin: auto;
-            height: 200px;
+            height: auto;
             padding: 10px 0px;
         }
         .card{
-            width:30%;
+            width:31%;
+            padding-top: 10%;
             padding-bottom:10%;
-            text-align: center;   
+            text-align: center;
             display: inline-block;
             background-color:  rgba(139,69,19,.8);    
+
+
+
+        }
+
+        button span{
+            color: white;
+        }
+
+        .action1, .action2{
+            background-color: goldenrod;
+            box-shadow: 1px 1px 1px black;
+            text-align: center;
+        }
+
+        .attack1, .attack2{
+            background-color: rgb(138, 48, 48);
+            border-radius: 5px;
+            width: 31%
+        }
+
+        .move1, .move2{
+            background-color: rgb(51, 51, 175);
+            border-radius: 5px;
+            width: 31%
+        }
+
+        .rest1, .rest2{
+            background-color: green;
+            border-radius: 5px;
+            width: 31%
+        }
+
+        .cardHand p{
+            width:33%;
+            display: inline-block;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 1%
         }
         .temp{
             color: white;
@@ -156,8 +196,14 @@
             width: 20px;
             height: 20px;
             float:right;
-            
         }
+        #notificationDiv{
+            height: 150px;
+            width: 200px;
+            background-color: grey;
+
+        }
+
 
     </style>
 
@@ -182,16 +228,16 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/game/characters" target="_blank" >Character Wiki</a>
+                    <a class="nav-link" href="/game/character_info" target="_blank" >Character Wiki</a>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="/game/enemies" target="_blank">Enemy Wiki</a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="/game/items" target="_blank">Item Wiki</a>
-                </li>
+                </li> -->
     
             </ul>
         </div>
@@ -202,16 +248,16 @@
             <h2>All Player Stats</h2>
             
 
-            <ul>
+            <ul id='publicStats'>
                 {% for player, value in request.session.stats.items %}
                         <li>{{player}} - {{value.name}} </li>
                         <ul><li>Health - {{value.health}}</li></ul>
                 {% endfor %}
             </ul>
-
+            <p>Notifications:</p>
+            <p id="notificationPara"></p>
 
         </div>
-
 
         <div class='middle'>
             <!-- <p class='temp'>{{request.session.stats}}</p> -->
@@ -238,30 +284,32 @@
                         <li>Leg Armor: {{value.items.legArmor.name}}</li>
                     </ul>
 
-                    <div class="container cardHnd">
-                        <div class="card"><h1>{{value.cards.card1}}</h1></div>
-                        <button class="card action1"><h1>{{value.cards.card2}}</h1></button>
-                        <button class="card action2"><h1>{{value.cards.card3}}</h1></button>
-
+                    <div class="container cardHand">
+                        <p>Defense</p><p>Action</p><p>Action</p>
+                        <div class="card"><h1>{{value.assignedCards.defense}}</h1></div>
+                        <button class="card action1"><h1>{{value.assignedCards.action1}}</h1></button>
+                        <button class="card action2"><h1>{{value.assignedCards.action2}}</h1></button>
                     </div>
                 {% endif %}
             {% endfor %}
 
             <div id='choices1' style="display: none">
-                <button class='attack1'>Attack</button>
-                <button class='move1'>Move</button>
-                <button class='rest1'>Rest</button>
+                <button class='attack1 choicesButton'><span>Attack</span></button>
+                <button class='move1 choicesButton'><span>Move</span></button>
+                <button class='rest1 choicesButton'><span>Rest</span></button>
 
             </div>
             <div id='choices2' style="display: none">
-                <button class='attack2'>Attack</button>
-                <button class='move2'>Move</button>
-                <button class='rest2'>Rest</button>
+                <button class='attack2 choicesButton'><span>Attack</span></button>
+                <button class='move2 choicesButton'><span>Move</span></button>
+                <button class='rest2 choicesButton'><span>Rest</span></button>
             </div>
         </div>
 
 
-
+        <form id='attackForm' action='/game/fight' method='post'>
+            {% csrf_token %}
+        </form>
     </main><!-- /.container -->
 
 
@@ -270,21 +318,37 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="../../assets/js/vendor/popper.min.js"></script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script> -->
 
 
     <script>
         var map = {{map | safe}}
-
+        
         var characters = {{orderedPlayers | safe}}
         var totalCharacters = 0;
 
         var name = "{{name}}"
+        var myVar = setInterval(loadMap, 3000);
 
+        function loadMap() {
+            var d = new Date();
+            // document.getElementById("demo").innerHTML = d.toLocaleTimeString();
+        }
         console.log(map)
+        
+        function updatePublicStats(playerDict){
+            var output = '';
+            for(var player in playerDict){
+                if (playerDict.hasOwnProperty(player)){
+                    output += '<li>' + player + ' - ' + playerDict[player]['name'] + '</li><ul><li>Health - ' + playerDict[player]['health'] + '</li></ul>'
+                }
+            }
+            document.getElementById('publicStats').innerHTML = output;
+        }
+
 
         function displayWorld(){
             var output = '';
@@ -295,15 +359,16 @@
                 3: 'wall',
                 4: 'wall_bottom',
                 5: 'lamppost',
+                6: 'small_door_top',
                 10: 'grass',
                 11: 'stone_floor',
                 12: 'ladder_bottom',
                 13: 'ladder',
                 14: 'ladder_top',
-                30: 'door'
+                30: 'small_door_bottom',
             }
-            console.log("~")
-            console.log("I'm here 1")
+            // console.log("~")
+            // console.log("I'm here 1")
             // print("I'm here!!")
 
             var output = ""
@@ -312,15 +377,13 @@
                 for(var j=0; j<map[i].length; j++){
                     if(map[i][j][1]==""){
                         output = output += "<div class='tile' style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
-                        console.log('player not found')
+                        // console.log('player not found')
                     }else{
                         output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/" + characters[map[i][j][1]]['name'] + "-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
                     }
                 }
                 output += "</div>";
             }
-            // console.log('output')
-            console.log(output);
             document.getElementById('playerMap').innerHTML = output;
         }
         
@@ -342,12 +405,13 @@
                 3: 'wall',
                 4: 'wall_bottom',
                 5: 'lamppost',
+                6: 'small_door_top',
                 10: 'grass',
                 11: 'stone_floor',
                 12: 'ladder_bottom',
                 13: 'ladder',
                 14: 'ladder_top',
-                30: 'door'
+                30: 'small_door_bottom',
             }
             // print("I'm here!!")
 
@@ -365,7 +429,7 @@
                         if(map[i][j][1]==""){
                             output = output += "<div class='tile highlighted' data-position='" + i + "-" + j + "' " + "style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
                         }else{
-                            output = output += "<div class='playerTile highlighted' data-position='" + i + "-" + j + "' " + "style=\"background-image:url('/static/game/img/knight-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
+                            output = output += "<div class='playerTile highlighted' data-position='" + i + "-" + j + "' " + "style=\"background-image:url('/static/game/img/"+ characters[map[i][j][1]]['name'] + "-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
                         }
                     }else{
                         if(map[i][j][1]==""){
@@ -413,7 +477,7 @@
                                 console.log("triggered left")
                                 // console.log(player['position']['x'])
 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -429,7 +493,7 @@
                                 console.log("triggered up")
                                 // console.log(player['position']['y'])
                                 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -446,7 +510,7 @@
                                 console.log("triggered right")
                                 // console.log(player['position']['x'])
                                 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -466,14 +530,14 @@
 
                                 // console.log("new change")
                                 
-                                moved++
+                                // moved++
 
                             }
                         }
 
                     }
                 }
-                if(moved <player.movementSpeed){
+                if(moved < player.movementSpeed){
                     console.log('performed step')
                 } else{
                     console.log('performed step')
@@ -484,6 +548,8 @@
 
 
         }
+        
+
 
 
         $(document).ready(function(){
@@ -505,11 +571,24 @@
                 $('#choices1').hide();
                 displayHighlightedWorld(name)
                 $('div.highlighted').click(function(){
-                    console.log('clicked')
-                    console.log($(this).attr('data-position'))
                     var position = $(this).attr('data-position')
-                    // name = name
-                    var card = "card1"
+                    var card = "1"
+                    var attackForm = ($('#attackForm').serialize()).slice(20);
+                    $.ajax ({
+                        method: 'POST',
+                        url: "/game/fight",
+                        data: { 'csrfmiddlewaretoken': attackForm, 'attackerName': name, 'cardNum': card, 'positionString': position },
+                        datatype: 'json',
+                        success: function(output){
+                            var playerDickies = JSON.parse(output)
+                            result = updatePublicStats(playerDickies)
+                            displayWorld()
+                        },
+                        error: function(){
+                            console.log('shit broke')
+                        },
+                    }),
+                    console.log("I'm out of ajax")
                 });
             });
 
@@ -518,6 +597,11 @@
                 $('button.action1').hide();
                 $('#choices1').hide();
                 movePlayer(name)
+
+
+
+                // $.post(url('/game/processMove'),{'map': map}, )
+
             });
 
             $('button.rest1').click(function(){
@@ -532,11 +616,24 @@
                 $('#choices2').hide();
                 displayHighlightedWorld(name)
                 $('div.highlighted').click(function(){
-                    console.log('clicked')
-                    console.log($(this).attr('data-position'))
                     var position = $(this).attr('data-position')
-                    // name = name
-                    var card = "card1"
+                    var card = "2"
+                    var attackForm = ($('#attackForm').serialize()).slice(20);
+                    $.ajax ({
+                        method: 'POST',
+                        url: "/game/fight",
+                        data: { 'csrfmiddlewaretoken': attackForm, 'attackerName': name, 'cardNum': card, 'positionString': position },
+                        datatype: 'json',
+                        success: function(output){
+                            var playerDickies = JSON.parse(output)
+                            result = updatePublicStats(playerDickies)
+                            displayWorld()
+                        },
+                        error: function(){
+                            console.log('shit broke')
+                        },
+                    }),
+                    console.log("I'm out of ajax")
                 });
             });
 
@@ -555,22 +652,19 @@
 
         });
 
-        // movePlayer('Tim')
+        
+        function gameLoop(){
+            console.log("gameLoop is running!");
+            displayWorld();
 
-        // movePlayer('Tim')
-  
-        // for (var key in characters){
-        //     console.log(key)
-        //     totalCharacters ++
-        //     console.log(totalCharacters)
-        // }
 
-        // if(totalCharacters >1){
-        //     for(var currentCharacter in characters){
-        //         console.log(currentCharacter)
-        //         movePlayer('Tim')
-        //     }
-        // }
+
+
+
+            setTimeout(gameLoop, 2000)
+        }
+
+        gameLoop();
 
 
         

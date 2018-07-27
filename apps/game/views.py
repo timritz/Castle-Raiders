@@ -13,7 +13,6 @@ def index(request,name):
         'name': name,
         'map': request.session['map']
     }
-    # print(context['map'])
     return render(request, 'game/temp_main.html', context)
 
 
@@ -191,3 +190,10 @@ def loadMap(area):
         ],
     }
     return areaMaps[area]
+
+
+def how_to_play(request):
+    return render(request, 'game/how_to_play.html')
+
+def character_info(request):
+    return render(request, 'game/character_info.html')

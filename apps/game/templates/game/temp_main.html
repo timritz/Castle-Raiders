@@ -136,15 +136,55 @@
         .cardHand{
             width: 99%;
             margin: auto;
-            height: 200px;
+            height: auto;
             padding: 10px 0px;
         }
         .card{
-            width:30%;
+            width:31%;
+            padding-top: 10%;
             padding-bottom:10%;
-            text-align: center;   
+            text-align: center;
             display: inline-block;
             background-color:  rgba(139,69,19,.8);    
+
+
+
+        }
+
+        button span{
+            color: white;
+        }
+
+        .action1, .action2{
+            background-color: goldenrod;
+            box-shadow: 1px 1px 1px black;
+            text-align: center;
+        }
+
+        .attack1, .attack2{
+            background-color: rgb(138, 48, 48);
+            border-radius: 5px;
+            width: 31%
+        }
+
+        .move1, .move2{
+            background-color: rgb(51, 51, 175);
+            border-radius: 5px;
+            width: 31%
+        }
+
+        .rest1, .rest2{
+            background-color: green;
+            border-radius: 5px;
+            width: 31%
+        }
+
+        .cardHand p{
+            width:33%;
+            display: inline-block;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 1%
         }
         .temp{
             color: white;
@@ -163,6 +203,7 @@
             background-color: grey;
 
         }
+
 
     </style>
 
@@ -187,16 +228,16 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/game/characters" target="_blank" >Character Wiki</a>
+                    <a class="nav-link" href="/game/character_info" target="_blank" >Character Wiki</a>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="/game/enemies" target="_blank">Enemy Wiki</a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="/game/items" target="_blank">Item Wiki</a>
-                </li>
+                </li> -->
     
             </ul>
         </div>
@@ -243,25 +284,25 @@
                         <li>Leg Armor: {{value.items.legArmor.name}}</li>
                     </ul>
 
-                    <div class="container cardHnd">
+                    <div class="container cardHand">
+                        <p>Defense</p><p>Action</p><p>Action</p>
                         <div class="card"><h1>{{value.assignedCards.defense}}</h1></div>
                         <button class="card action1"><h1>{{value.assignedCards.action1}}</h1></button>
                         <button class="card action2"><h1>{{value.assignedCards.action2}}</h1></button>
-
                     </div>
                 {% endif %}
             {% endfor %}
 
             <div id='choices1' style="display: none">
-                <button class='attack1'>Attack</button>
-                <button class='move1'>Move</button>
-                <button class='rest1'>Rest</button>
+                <button class='attack1 choicesButton'><span>Attack</span></button>
+                <button class='move1 choicesButton'><span>Move</span></button>
+                <button class='rest1 choicesButton'><span>Rest</span></button>
 
             </div>
             <div id='choices2' style="display: none">
-                <button class='attack2'>Attack</button>
-                <button class='move2'>Move</button>
-                <button class='rest2'>Rest</button>
+                <button class='attack2 choicesButton'><span>Attack</span></button>
+                <button class='move2 choicesButton'><span>Move</span></button>
+                <button class='rest2 choicesButton'><span>Rest</span></button>
             </div>
         </div>
 
@@ -326,6 +367,8 @@
                 14: 'ladder_top',
                 30: 'small_door_bottom',
             }
+            // console.log("~")
+            // console.log("I'm here 1")
             // print("I'm here!!")
 
             var output = ""
@@ -334,6 +377,7 @@
                 for(var j=0; j<map[i].length; j++){
                     if(map[i][j][1]==""){
                         output = output += "<div class='tile' style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
+                        // console.log('player not found')
                     }else{
                         output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/" + characters[map[i][j][1]]['name'] + "-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
                     }
@@ -433,7 +477,7 @@
                                 console.log("triggered left")
                                 // console.log(player['position']['x'])
 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -449,7 +493,7 @@
                                 console.log("triggered up")
                                 // console.log(player['position']['y'])
                                 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -466,7 +510,7 @@
                                 console.log("triggered right")
                                 // console.log(player['position']['x'])
                                 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -486,7 +530,7 @@
 
                                 // console.log("new change")
                                 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -504,6 +548,8 @@
 
 
         }
+        
+
 
 
         $(document).ready(function(){
@@ -551,6 +597,11 @@
                 $('button.action1').hide();
                 $('#choices1').hide();
                 movePlayer(name)
+
+
+
+                // $.post(url('/game/processMove'),{'map': map}, )
+
             });
 
             $('button.rest1').click(function(){
@@ -601,22 +652,19 @@
 
         });
 
-        // movePlayer('Tim')
+        
+        function gameLoop(){
+            console.log("gameLoop is running!");
+            displayWorld();
 
-        // movePlayer('Tim')
-  
-        // for (var key in characters){
-        //     console.log(key)
-        //     totalCharacters ++
-        //     console.log(totalCharacters)
-        // }
 
-        // if(totalCharacters >1){
-        //     for(var currentCharacter in characters){
-        //         console.log(currentCharacter)
-        //         movePlayer('Tim')
-        //     }
-        // }
+
+
+
+            setTimeout(gameLoop, 2000)
+        }
+
+        gameLoop();
 
 
         

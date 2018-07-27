@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Character Information</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
+    {% load static %}
+    <style>
+        *{
+            font-family: MedievalSharp;
+            color: white;
+        }
+        body{
+            background-image: url("{% static 'game/img/grass.png' %}");
+            background-repeat:repeat;
+        }
+
+        img{
+            display: inline-block;
+            margin-right: 1%;
+            width: 7%
+        }
+
+        .spacer{
+            display: inline-block;
+            vertical-align: top;
+            width: 90%;
+            color: white;
+            text-shadow: -1px -1px  black,
+        }
+    </style>
+</head>
+<body>
+    <h1>These are the characters of "Game to be Named"</h1>
+
+    <img class="knightPic" src="/static/game/img/knight-guard-f.png">
+    <div class="spacer">
+        <h2>Knight</h2>
+        <h3>A heavily defended and physically powerful fighter, who is slow moving but deals and takes attacks well. </h3>
+    </div>
+
+    <img class="magePic" src="/static/game/img/mage-guard-f.png">
+    <div class="spacer">
+        <h2>Mage</h2>
+        <h3>A powerful fighter who can attack from range using magical spells, but suceptible to attacks when fighinting at close range.</h3>
+    </div>
+
+    <img class="roguePic" src="/static/game/img/rogue-guard-f.png">
+    <div class="spacer">
+        <h2>Rogue</h2>
+        <h3>A powerful fighter who excels at map mobility and one on one combat, but can be overwhelmed by fighting multiple foes at once.</h3>
+    </div>
+
+    <img class="bardPic" src="/static/game/img/bard-guard-f.png">
+    <div class="spacer">
+        <h2>Bard</h2>
+        <h3>A weaker fighter who excels defensively and can charm enemies into submission by playing songs from a magical harp.</h3>
+    </div>
+</body>
+</html>
