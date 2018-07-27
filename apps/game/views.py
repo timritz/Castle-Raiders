@@ -2,6 +2,8 @@ from django.shortcuts import render, HttpResponse, redirect
 from .models import *
 import Character_Attributes_OOP
 import collections
+from django.core import serializers
+import json
 
 def index(request,name):
 
@@ -11,9 +13,7 @@ def index(request,name):
         'name': name,
         'map': request.session['map']
     }
-    fight(request, 'Tim', '5-5', '2')
-
-    print(context['map'])
+    # print(context['map'])
     return render(request, 'game/temp_main.html', context)
 
 
@@ -23,19 +23,29 @@ def serveCards(request, player):
     return True
 
 
-def fight(request, attackingPlayer, effectidx, cardNum):
-    attackingPlayer = request.session['orderedPlayerDict'][attackingPlayer]
-    tile = effectidx.split('-')
+def fight(request):
+    attackingPlayer = request.session['orderedPlayerDict'][request.POST['attackerName']]
+    tile = request.POST['positionString'].split('-')
     position = [int(tile[0]), int(tile[1])]
-    defendingPlayer = request.session['orderedPlayerDict'][request.session['map'][position[0]][position[1]][1]]
-    print(defendingPlayer)
-    if defendingPlayer != "":
-
+    defenderName = request.session['map'][position[0]][position[1]][1]
+    if(defenderName == ""):
+        response = "No Enemy"
+        return HttpResponse(response)
+    defendingPlayer = request.session['orderedPlayerDict'][defenderName]
+    if defendingPlayer['assignedCards']['defense'] >= attackingPlayer['assignedCards']['action' + str(request.POST['cardNum'])]:
+        response = "No Damage Dealt"
+        return HttpResponse(response)
+    else:
+        print(request.session['orderedPlayerDict'][defenderName]['health'])
+        request.session['orderedPlayerDict'][defenderName]['health'] -= 1
+        print(request.session['orderedPlayerDict'][defenderName]['health'])
+        response = str(request.POST['attackerName']) + " did " + "1" + " damage to " + str(defenderName)
+        request.session.modified = True
+        return HttpResponse(response)
 
     # Will take in the player who is fighting, the character who is being fought
     # Will take in their attack, defense including cards and run the initial numbers
     # Will use those numbers to calculate the results, then update orderedDict and return the result
-        return HttpResponse(response)  
 
 
 def runGame(request):
@@ -110,8 +120,8 @@ def prep_game(request, name):
 
         positions = {
             '1': [0, 0],
-            # '2': [1, 0],
-            '2': [len(map[0]) - 1, 0],
+            '2': [1, 0],
+            #'2': [len(map[0]) - 1, 0],
             '3': [0, len(map) - 1],
             '4': [len(map[0]) - 1, len(map) - 1]
         }
@@ -155,11 +165,11 @@ def loadMap(area):
         'entrance':
          [
             [[11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""]],
-            [[13, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""], [0, ""]],
-            [[12, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""]],
+            [[13, ""], [0, ""], [0, ""], [0, ""], [0, ""], [6, ""], [0, ""], [0, ""], [0, ""], [13, ""]],
+            [[12, ""], [4, ""], [4, ""], [4, ""], [4, ""], [30, ""], [4, ""], [4, ""], [4, ""], [12, ""]],
             [[11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""]],
             [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
-            [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, "Jeremy"], [10, ""], [10, ""], [10, ""], [10, ""]],
+            [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
             [[2, ""], [2, ""], [2, ""], [2, ""], [11, ""], [11, ""], [2, ""], [2, ""], [2, ""], [2, ""]],
             [[1, ""], [1, ""], [1, ""], [1, ""], [11, ""], [11, ""], [1, ""], [1, ""], [1, ""], [1, ""]],
             [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],

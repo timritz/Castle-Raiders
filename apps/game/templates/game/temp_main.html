@@ -21,9 +21,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
     <script
-    src="https://code.jquery.com/jquery-2.2.4.min.js"
-    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-    crossorigin="anonymous"></script>
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
 
     <style>
         .tile{
@@ -156,7 +156,12 @@
             width: 20px;
             height: 20px;
             float:right;
-            
+        }
+        #notificationDiv{
+            height: 150px;
+            width: 200px;
+            background-color: grey;
+
         }
 
     </style>
@@ -208,10 +213,10 @@
                         <ul><li>Health - {{value.health}}</li></ul>
                 {% endfor %}
             </ul>
-
+            <p>Notifications:</p>
+            <p id="notificationPara"></p>
 
         </div>
-
 
         <div class='middle'>
             <!-- <p class='temp'>{{request.session.stats}}</p> -->
@@ -239,9 +244,9 @@
                     </ul>
 
                     <div class="container cardHnd">
-                        <div class="card"><h1>{{value.cards.card1}}</h1></div>
-                        <button class="card action1"><h1>{{value.cards.card2}}</h1></button>
-                        <button class="card action2"><h1>{{value.cards.card3}}</h1></button>
+                        <div class="card"><h1>{{value.assignedCards.defense}}</h1></div>
+                        <button class="card action1"><h1>{{value.assignedCards.action1}}</h1></button>
+                        <button class="card action2"><h1>{{value.assignedCards.action2}}</h1></button>
 
                     </div>
                 {% endif %}
@@ -261,7 +266,9 @@
         </div>
 
 
-
+        <form id='attackForm' action='/game/fight' method='post'>
+            {% csrf_token %}
+        </form>
     </main><!-- /.container -->
 
 
@@ -270,15 +277,15 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="../../assets/js/vendor/popper.min.js"></script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script> -->
 
 
     <script>
         var map = {{map | safe}}
-
+        
         var characters = {{orderedPlayers | safe}}
         var totalCharacters = 0;
 
@@ -287,7 +294,7 @@
 
         function loadMap() {
             var d = new Date();
-            document.getElementById("demo").innerHTML = d.toLocaleTimeString();
+            // document.getElementById("demo").innerHTML = d.toLocaleTimeString();
         }
         
         console.log(map)
@@ -301,15 +308,14 @@
                 3: 'wall',
                 4: 'wall_bottom',
                 5: 'lamppost',
+                6: 'small_door_top',
                 10: 'grass',
                 11: 'stone_floor',
                 12: 'ladder_bottom',
                 13: 'ladder',
                 14: 'ladder_top',
-                30: 'door'
+                30: 'small_door_bottom',
             }
-            console.log("~")
-            console.log("I'm here 1")
             // print("I'm here!!")
 
             var output = ""
@@ -318,15 +324,12 @@
                 for(var j=0; j<map[i].length; j++){
                     if(map[i][j][1]==""){
                         output = output += "<div class='tile' style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
-                        console.log('player not found')
                     }else{
                         output = output += "<div class='playerTile' style=\"background-image:url('/static/game/img/" + characters[map[i][j][1]]['name'] + "-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
                     }
                 }
                 output += "</div>";
             }
-            // console.log('output')
-            console.log(output);
             document.getElementById('playerMap').innerHTML = output;
         }
         
@@ -348,12 +351,13 @@
                 3: 'wall',
                 4: 'wall_bottom',
                 5: 'lamppost',
+                6: 'small_door_top',
                 10: 'grass',
                 11: 'stone_floor',
                 12: 'ladder_bottom',
                 13: 'ladder',
                 14: 'ladder_top',
-                30: 'door'
+                30: 'small_door_bottom',
             }
             // print("I'm here!!")
 
@@ -511,11 +515,23 @@
                 $('#choices1').hide();
                 displayHighlightedWorld(name)
                 $('div.highlighted').click(function(){
-                    console.log('clicked')
-                    console.log($(this).attr('data-position'))
                     var position = $(this).attr('data-position')
-                    // name = name
-                    var card = "card1"
+                    var card = "1"
+                    var attackForm = ($('#attackForm').serialize()).slice(20);
+                    $.ajax ({
+                        method: 'POST',
+                        url: "/game/fight",
+                        data: { 'csrfmiddlewaretoken': attackForm, 'attackerName': name, 'cardNum': card, 'positionString': position },
+                        datatype: 'json',
+                        success: function(output){
+                            console.log(output),
+                            $('#notificationPara').html(output)
+                        },
+                        error: function(){
+                            console.log('shit broke')
+                        },
+                    }),
+                    console.log("I'm out of ajax")
                 });
             });
 
@@ -538,11 +554,23 @@
                 $('#choices2').hide();
                 displayHighlightedWorld(name)
                 $('div.highlighted').click(function(){
-                    console.log('clicked')
-                    console.log($(this).attr('data-position'))
                     var position = $(this).attr('data-position')
-                    // name = name
-                    var card = "card1"
+                    var card = "2"
+                    var attackForm = ($('#attackForm').serialize()).slice(20);
+                    $.ajax ({
+                        method: 'POST',
+                        url: "/game/fight",
+                        data: { 'csrfmiddlewaretoken': attackForm, 'attackerName': name, 'cardNum': card, 'positionString': position },
+                        datatype: 'json',
+                        success: function(output){
+                            console.log(output),
+                            $('#notificationPara').html(output);
+                        },
+                        error: function(){
+                            console.log('shit broke')
+                        },
+                    }),
+                    console.log("I'm out of ajax")
                 });
             });
 

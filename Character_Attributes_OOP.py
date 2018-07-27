@@ -98,10 +98,10 @@ class Knight(Character):
             'bodyArmor': {'name': "Iron ChestPlate", 'statBonus': 0},
             'legArmor': {'name': "Iron Boots", 'statBonus': 0}}
 
-        self.cards = {  # holds the unassigned cards of the character
-            'card1': random.randint(1, 10),  # randomly assigned
-            'card2': random.randint(1, 10),  # randomly assigned
-            'card3': random.randint(1, 10)}  # randomly assigned
+        self.assignedCards = {  # holds the unassigned cards of the character
+            'defense': random.randint(1, 10),  # randomly assigned
+            'action1': random.randint(1, 10),  # randomly assigned
+            'action2': random.randint(1, 10)}  # randomly assigned
 
 class Mage(Character):
     def __init__(self):
