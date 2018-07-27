@@ -244,7 +244,7 @@
             
 
             <ul>
-                {% for player, value in request.session.stats.items %}
+                {% for player, value in orderedPlayers.items %}
                         <li>{{player}} - {{value.name}} </li>
                         <ul><li>Health - {{value.health}}</li></ul>
                 {% endfor %}
@@ -264,9 +264,9 @@
         
 
         <div class="container playerStats">
-            <h2>Personal Player Stats</h2>
+            <h2>{{name}}'s Player Stats</h2>
 
-            {% for player, value in request.session.stats.items %}
+            {% for player, value in orderedPlayers.items %}
                 {% if player == name %}
                     <li>Health - {{value.health}}</li>
                     <li>Energy Level - {{value.energyLevel}}</li>
@@ -300,6 +300,36 @@
                 <button class='move2 choicesButton'><span>Move</span></button>
                 <button class='rest2 choicesButton'><span>Rest</span></button>
             </div>
+            <form action="/game/update/{{name}}" method="POST">
+                {% csrf_token %}
+                <input id="formMap" type='hidden' name='map' value="">
+
+                <input id ="formPlayerInfoX" type='hidden' name='playersInfoX' value="">
+                <input id ="formPlayerInfoY" type='hidden' name='playersInfoY' value="">
+
+                <input id="submitButton" type="submit" name= 'update' value="Update">
+
+            </form>
+            <form action="/game/update/{{name}}/fight" method="POST">
+                {% csrf_token %}
+                <input id="formMap" type='hidden' name='map' value="">
+
+                <input id ="formAttacker" type='hidden' name='attacker' value="">
+                <input id ="formSpotAttacked" type='hidden' name='spotAttacked' value="">
+                <input id ="formCardUsed" type='hidden' name='cardUsed' value="">
+
+                <input id="submitButton" type="submit" name= 'update' value="Update Fight">
+            </form>
+
+            <form action="/game/update/{{name}}/rest" method="POST">
+                {% csrf_token %}
+                <input id="formMap" type='hidden' name='map' value="">
+
+                <input id ="formPlayer" type='hidden' name='player' value="">
+                <!-- <input id ="formSpotAttacked" type='hidden' name='spotAttacked' value="">
+                <input id ="formCardUsed" type='hidden' name='cardUsed' value=""> -->
+                <input id="submitButton" type="submit" name= 'update' value="Update Rest">
+            </form>
         </div>
 
 
@@ -413,7 +443,7 @@
                         if(map[i][j][1]==""){
                             output = output += "<div class='tile highlighted' data-position='" + i + "-" + j + "' " + "style=\"background-image: url('/static/game/img/" + tileDict[map[i][j][0]] + ".png')\"></div>";
                         }else{
-                            output = output += "<div class='playerTile highlighted' data-position='" + i + "-" + j + "' " + "style=\"background-image:url('/static/game/img/knight-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
+                            output = output += "<div class='playerTile highlighted' data-position='" + i + "-" + j + "' " + "style=\"background-image:url('/static/game/img/" + characters[map[i][j][1]]['name'] + "-guard-f.png'), url('/static/game/img/" + tileDict[map[i][j][0]] +".png')\"></div>";
                         }
                     }else{
                         if(map[i][j][1]==""){
@@ -461,7 +491,7 @@
                                 console.log("triggered left")
                                 // console.log(player['position']['x'])
 
-                                // moved++
+                                moved++
 
                             }
                         }
@@ -477,7 +507,7 @@
                                 console.log("triggered up")
                                 // console.log(player['position']['y'])
                                 
-                                // moved++
+                                moved++
 
                             }
                         }
@@ -494,7 +524,7 @@
                                 console.log("triggered right")
                                 // console.log(player['position']['x'])
                                 
-                                // moved++
+                                moved++
 
                             }
                         }
@@ -514,7 +544,7 @@
 
                                 // console.log("new change")
                                 
-                                // moved++
+                                moved++
 
                             }
                         }
@@ -526,6 +556,13 @@
                 } else{
                     console.log('performed step')
                     console.log('movements completed')
+                    map = map
+
+                    console.log(player['position']['x'])
+                    console.log(player['position']['y'])
+                    $('#formMap').attr('value', map)
+                    $('#formPlayerInfoX').attr('value', player['position']['x'])
+                    $('#formPlayerInfoY').attr('value', player['position']['y'])
                 }
                 displayWorld()
             });
@@ -555,11 +592,17 @@
                 $('#choices1').hide();
                 displayHighlightedWorld(name)
                 $('div.highlighted').click(function(){
+                    displayWorld()
                     console.log('clicked')
                     console.log($(this).attr('data-position'))
                     var position = $(this).attr('data-position')
                     // name = name
-                    var card = "card1"
+                    var card = "2"
+
+                    $('#formAttacker').attr('value', name)
+                    $('#formSpotAttacked').attr('value', position)
+                    $('#formCardUsed').attr('value', card)
+
                 });
             });
 
@@ -568,8 +611,8 @@
                 $('button.action1').hide();
                 $('#choices1').hide();
                 movePlayer(name)
-
-
+                // $('#formMap').attr('value', map)
+                console.log(map)
 
                 // $.post(url('/game/processMove'),{'map': map}, )
 
@@ -579,6 +622,9 @@
                 console.log('clicked')
                 $('button.action1').hide();
                 $('#choices1').hide();
+
+                $('#formPlayer').attr('value', name)
+
             });
 
             $('button.attack2').click(function(){
@@ -587,11 +633,20 @@
                 $('#choices2').hide();
                 displayHighlightedWorld(name)
                 $('div.highlighted').click(function(){
+                    displayWorld()
                     console.log('clicked')
                     console.log($(this).attr('data-position'))
                     var position = $(this).attr('data-position')
                     // name = name
-                    var card = "card1"
+                    var card = "3"
+
+                    $('#formAttacker').attr('value', name)
+                    $('#formSpotAttacked').attr('value', position)
+                    $('#formCardUsed').attr('value', card)
+
+                    // <input id ="formAttacker" type='hidden' name='attacker' value="">
+                    // <input id ="formSpotAttacked" type='hidden' name='spotAttacked' value="">
+                    // <input id ="formCardUsed" type='hidden' name='cardUsed' value="">
                 });
             });
 
@@ -606,6 +661,9 @@
                 console.log('clicked')
                 $('button.action2').hide();
                 $('#choices2').hide();
+
+                $('#formPlayer').attr('value', name)
+
             });
 
         });
@@ -622,7 +680,7 @@
             setTimeout(gameLoop, 2000)
         }
 
-        gameLoop();
+        // gameLoop();
 
 
         

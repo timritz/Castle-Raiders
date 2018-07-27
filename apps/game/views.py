@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from .models import *
 import Character_Attributes_OOP
 import collections
+import json
 
 def index(request,name):
 
@@ -11,9 +12,10 @@ def index(request,name):
         'name': name,
         'map': request.session['map']
     }
-    # fight(request, 'Tim', '5-5', '2')
 
-    print(context['map'])
+    # print(request.session['orderedPlayerDict'])
+
+    # print(context['map'])
     return render(request, 'game/temp_main.html', context)
 
 
@@ -128,8 +130,8 @@ def prep_game(request, name):
 
         positions = {
             '1': [0, 0],
-            # '2': [1, 0],
-            '2': [len(map[0]) - 1, 0],
+            '2': [1, 0],
+            # '2': [len(map[0]) - 1, 0],
             '3': [0, len(map) - 1],
             '4': [len(map[0]) - 1, len(map) - 1]
         }
@@ -205,3 +207,99 @@ def how_to_play(request):
 
 def character_info(request):
     return render(request, 'game/character_info.html')
+
+def updateGame(request, name):
+
+    if(request.method=="POST"):
+
+        print("incoming Form,", request.POST)
+
+        # print("incoming player", request.POST['playersInfo'])
+        # print(type(request.POST['playersInfo']))
+
+        # json.loads(request.POST['playersInfo'])
+
+        # print("incoming player", request.POST['playersInfo'])
+        # print(type(request.POST['playersInfo']))
+
+
+        newMap = request.POST['map'].split(',')
+
+        i = 0
+        new_list = []
+        while i < len(newMap):
+            new_list.append(newMap[i:i + 2])
+            i += 2
+
+        i = 0
+        updated_map = []
+        while i < len(new_list):
+            updated_map.append(new_list[i:i + 10])
+            i += 10
+
+        request.session['orderedPlayerDict'][name]['position']['x'] = int(request.POST['playersInfoX'])
+        request.session['orderedPlayerDict'][name]['position']['y'] = int(request.POST['playersInfoY'])
+
+        print(request.session['orderedPlayerDict'][name]['position'])
+
+        request.session['map'] = updated_map
+
+
+    return redirect('/game/'+ name)
+
+def processFight(request, name):
+
+    if(request.method=="POST"):
+
+        print(request.POST)
+        print(name)
+
+
+    attackingPlayer = request.session['orderedPlayerDict'][request.POST['attacker']]
+    tile = request.POST['spotAttacked'].split('-')
+    position = [int(tile[0]), int(tile[1])]
+
+    defenderName = request.session['map'][position[0]][position[1]][1]
+
+    if(defenderName == ""):
+        print('no one to attack')
+        return redirect('/game/' + name)
+    defendingPlayer = request.session['orderedPlayerDict'][defenderName]
+
+    print(defendingPlayer)
+
+    print("defense:", defendingPlayer['cards']['card1'])
+    print("attack:", attackingPlayer['cards']['card' + str(request.POST['cardUsed'])])
+
+
+    if defendingPlayer['cards']['card1'] >= attackingPlayer['cards']['card' + str(request.POST['cardUsed'])]:
+        print('defender won')
+        return redirect('/game/' + name)
+    else:
+        print('attacker won')
+
+        print(defenderName)
+        print('inital health:', request.session['orderedPlayerDict'][defenderName]['health'])
+        request.session['orderedPlayerDict'][defenderName]['health'] -= 1
+        print('updated health:', request.session['orderedPlayerDict'][defenderName]['health'])
+
+        request.session.modified = True
+
+        return redirect('/game/' + name)
+
+
+    # Will take in the player who is fighting, the character who is being fought
+    # Will take in their attack, defense including cards and run the initial numbers
+    # Will use those numbers to calculate the results, then update orderedDict and return the result
+    return redirect('/game/'+name)
+
+def processRest(request, name):
+
+    if(request.method == "POST"):
+        print(request.POST)
+        request.session['orderedPlayerDict'][request.POST['player']]['health'] += 1
+
+        request.session.modified = True
+
+
+    return redirect('/game/'+name)
