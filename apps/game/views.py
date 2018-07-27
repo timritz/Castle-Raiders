@@ -208,7 +208,7 @@ def how_to_play(request):
 def character_info(request):
     return render(request, 'game/character_info.html')
 
-def updateGame(request, name):
+def processMove(request, name):
 
     if(request.method=="POST"):
 
