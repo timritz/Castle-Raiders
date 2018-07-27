@@ -2,7 +2,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^/fight$', views.fight),
+    url(r'^/gameState$', views.game_state),
     url(r'^/(?P<name>[a-zA-Z]+)$', views.index),
     url(r'^/prep/(?P<name>[a-zA-Z]+)$', views.prep_game),
     url(r'^/how_to_play$', views.how_to_play),

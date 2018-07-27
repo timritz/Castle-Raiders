@@ -651,14 +651,38 @@
             });
 
         });
+        function runTurn(){
+            $('button.action1').show();
+            $('button.action2').show();
 
-        
+        }
+
+        var playerDict = {};
+        var worldMap = [];
+        var playerTurn = ''
         function gameLoop(){
             console.log("gameLoop is running!");
             displayWorld();
-
-
-
+            $.ajax ({
+                method: 'GET',
+                url: "/game/gameState",
+                datatype: 'json',
+                success: function(output){
+                    var worldDickies = JSON.parse(output);
+                    playerDict = worldDickies['updatedPlayerDict'];
+                    worldMmap = worldDickies['updatedMap'];
+                    playerTurn = worldDickies['playerTurn'];
+                    updatePublicStats(playerDict);
+                    displayWorld(worldMap)
+                },
+                error: function(){
+                    console.log('shit broke')
+                },
+            }),
+            if(name == playerTurn){
+                runTurn()
+            }
+            else:
 
 
             setTimeout(gameLoop, 2000)

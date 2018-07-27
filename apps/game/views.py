@@ -43,30 +43,25 @@ def fight(request):
         # orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
         return HttpResponse(json.dumps(playerDict), content_type = 'application/javascript; charset=utf8')
 
+def game_state(request):
+    gameStateDict = {}
+    updatedMap = request.session['map']
+    playerDict = collections.OrderedDict(sorted(request.session['orderedPlayerDict'].items(), key=lambda t: t[1]['priority']))
+    gameStateDict['updatedMap'] = updatedMap
+    gameStateDict['updatedPlayerDict'] = playerDict
+    gameStateDict['playerTurn'] = request.session['playerTurn']
+    # orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
+    return HttpResponse(json.dumps(gameStateDict), content_type = 'application/javascript; charset=utf8')
+
     # Will take in the player who is fighting, the character who is being fought
     # Will take in their attack, defense including cards and run the initial numbers
     # Will use those numbers to calculate the results, then update orderedDict and return the result
 
 
-def runGame(request):
-    request.session['playerCount'] = 0
-    for player in request.session['orderedPlayerDict']:
-        playerCount += 1
-        serveCards(player)
-    if(playerCount == 1):
-        playerCount == 2
-    context={
-        # 'players': submittedPlayerList,
-        'orderedPlayers': request.session['orderedPlayerDict'],
-        'name': str(name),
-        'map': request.session['map']
-    }
+def activePlayer(request):
     while(request.session['playerCount'] > 1):
         for player in request.session['orderedPlayerDict']:
-            if(playerName == player.name):
-                yield render(request, 'game/temp_action_main.html', context)
-            else:
-                yield render(request, 'game/temp_static_main.html', context)
+            yield player
 
 
 
