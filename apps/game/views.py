@@ -11,7 +11,7 @@ def index(request,name):
         'name': name,
         'map': request.session['map']
     }
-    fight(request, 'Tim', '5-5', '2')
+    # fight(request, 'Tim', '5-5', '2')
 
     print(context['map'])
     return render(request, 'game/temp_main.html', context)
@@ -23,13 +23,31 @@ def serveCards(request, player):
     return True
 
 
-def fight(request, attackingPlayer, effectidx, cardNum):
-    attackingPlayer = request.session['orderedPlayerDict'][attackingPlayer]
-    tile = effectidx.split('-')
+def fight(request, attackerName, positionString, cardNum):
+    attackingPlayer = request.session['orderedPlayerDict'][attackerName]
+    tile = positionString.split('-')
     position = [int(tile[0]), int(tile[1])]
-    defendingPlayer = request.session['orderedPlayerDict'][request.session['map'][position[0]][position[1]][1]]
+
+    defenderName = request.session['map'][position[0]][position[1]][1]
+
+    if(defenderName == ""):
+
+        return HttpResponse("No Enemy")
+
+    defendingPlayer = request.session['orderedPlayerDict'][defenderName]
+
     print(defendingPlayer)
-    if defendingPlayer != "":
+
+    if defendingPlayer['defense'] >= attackingPlayer['action' + str(cardNum)]:
+
+        return HttpResponse("No Damage")
+
+    else:
+
+        request.session['OrderedPlayerDict'][defenderName]['health'] -= 1
+
+        return HttpResponse(str(attackerName) + "did damage to " + str(defenderName))
+
 
 
     # Will take in the player who is fighting, the character who is being fought
@@ -159,7 +177,7 @@ def loadMap(area):
             [[12, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""], [4, ""]],
             [[11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""], [11, ""]],
             [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
-            [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, "Jeremy"], [10, ""], [10, ""], [10, ""], [10, ""]],
+            [[10, ""], [10, ""], [10, ""], [10, ""], [11, ""], [11, ""], [10, ""], [10, ""], [10, ""], [10, ""]],
             [[2, ""], [2, ""], [2, ""], [2, ""], [11, ""], [11, ""], [2, ""], [2, ""], [2, ""], [2, ""]],
             [[1, ""], [1, ""], [1, ""], [1, ""], [11, ""], [11, ""], [1, ""], [1, ""], [1, ""], [1, ""]],
             [[10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""], [10, ""]],

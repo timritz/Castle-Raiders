@@ -6,3 +6,5 @@ class Player(models.Model):
     name = models.CharField(max_length= 255)
     characterType = models.CharField(max_length=255)
     status=models.CharField(max_length=255)
+
+
