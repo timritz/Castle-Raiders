@@ -223,16 +223,16 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/game/characters" target="_blank" >Character Wiki</a>
+                    <a class="nav-link" href="/game/character_info" target="_blank" >Character Wiki</a>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="/game/enemies" target="_blank">Enemy Wiki</a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="/game/items" target="_blank">Item Wiki</a>
-                </li>
+                </li> -->
     
             </ul>
         </div>
@@ -461,7 +461,7 @@
                                 console.log("triggered left")
                                 // console.log(player['position']['x'])
 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -477,7 +477,7 @@
                                 console.log("triggered up")
                                 // console.log(player['position']['y'])
                                 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -494,7 +494,7 @@
                                 console.log("triggered right")
                                 // console.log(player['position']['x'])
                                 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -514,7 +514,7 @@
 
                                 // console.log("new change")
                                 
-                                moved++
+                                // moved++
 
                             }
                         }
@@ -568,6 +568,11 @@
                 $('button.action1').hide();
                 $('#choices1').hide();
                 movePlayer(name)
+
+
+
+                // $.post(url('/game/processMove'),{'map': map}, )
+
             });
 
             $('button.rest1').click(function(){
@@ -609,6 +614,10 @@
         function gameLoop(){
             console.log("gameLoop is running!");
             displayWorld();
+
+
+
+
 
             setTimeout(gameLoop, 2000)
         }
