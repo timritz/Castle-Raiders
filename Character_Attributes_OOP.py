@@ -119,10 +119,10 @@ class Mage(Character):
             'bodyArmor': {'name': "Robes", 'statBonus': 0},
             'legArmor': {'name': "Sandals", 'statBonus': 0}}
 
-        self.cards = {  # holds the unassigned cards of the character
-            'card1': random.randint(1, 10),
-            'card2': random.randint(1, 10),
-            'card3': random.randint(1, 10)}
+        self.assignedCards = {  # holds the unassigned cards of the character
+            'defense': random.randint(1, 10),  # randomly assigned
+            'action1': random.randint(1, 10),  # randomly assigned
+            'action2': random.randint(1, 10)}  # randomly assigned
 
 class Rogue(Character):
     def __init__(self):
@@ -140,10 +140,10 @@ class Rogue(Character):
             'bodyArmor': {'name': "Leather ChestPlate", 'statBonus': 0},
             'legArmor': {'name': "Leather Boots", 'statBonus': 0}}
 
-        self.cards = {  # holds the unassigned cards of the character
-            'card1': random.randint(1, 10),
-            'card2': random.randint(1, 10),
-            'card3': random.randint(1, 10)}
+        self.assignedCards = {  # holds the unassigned cards of the character
+            'defense': random.randint(1, 10),  # randomly assigned
+            'action1': random.randint(1, 10),  # randomly assigned
+            'action2': random.randint(1, 10)}  # randomly assigned
 
 class Bard(Character):
     def __init__(self):
@@ -162,10 +162,10 @@ class Bard(Character):
             'bodyArmor': {'name': "Costume", 'statBonus': 0},
             'legArmor': {'name': "Noisy Shoes", 'statBonus': 0}}
 
-        self.cards = {  # holds the unassigned cards of the character
-            'card1': random.randint(1, 10),
-            'card2': random.randint(1, 10),
-            'card3': random.randint(1, 10)}
+        self.assignedCards = {  # holds the unassigned cards of the character
+            'defense': random.randint(1, 10),  # randomly assigned
+            'action1': random.randint(1, 10),  # randomly assigned
+            'action2': random.randint(1, 10)}  # randomly assigned
 
 # bard1 = Bard()
 # bard1.displayInfo()

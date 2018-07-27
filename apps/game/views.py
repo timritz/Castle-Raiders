@@ -39,9 +39,10 @@ def fight(request):
         print(request.session['orderedPlayerDict'][defenderName]['health'])
         request.session['orderedPlayerDict'][defenderName]['health'] -= 1
         print(request.session['orderedPlayerDict'][defenderName]['health'])
-        response = str(request.POST['attackerName']) + " did " + "1" + " damage to " + str(defenderName)
         request.session.modified = True
-        return HttpResponse(response)
+        playerDict = collections.OrderedDict(sorted(request.session['orderedPlayerDict'].items(), key=lambda t: t[1]['priority']))
+        # orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
+        return HttpResponse(json.dumps(playerDict), content_type = 'application/javascript; charset=utf8')
 
     # Will take in the player who is fighting, the character who is being fought
     # Will take in their attack, defense including cards and run the initial numbers
