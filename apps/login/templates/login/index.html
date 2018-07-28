@@ -32,16 +32,19 @@
       }
       p{
         min-width:10%;
-        display: inline-block;
+        /* display: inline-block; */
         vertical-align: top;
-        text-align: center;
-        line-height: 36px;
+        text-align: left;
+        /* line-height: 36px; */
         font-weight: bold;
         text-shadow: -1px -1px 0 black,
         1px -1px 0 black,
         -1px 1px 0 black,
         1px 1px 0 black;
         font-size: large;
+        margin-top: 10px;
+        margin-bottom: 0px;
+        margin-left: 25%;
       }
 
       h1{
@@ -51,15 +54,27 @@
         1px 1px 0 black;
       }
 
+      body{
+        background-image: url('/static/game/img/castle_door.gif');
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
       .form-control{
         width: 50%;
         display: inline-block;
         vertical-align: top;
         border-color: none;
+        /* border: none; */
+        /* outline: 1px solid green; */
       }
 
       .form-control:focus{
         border:none;
+        box-shadow: none;
+        /* box-shadow:  -1px -1px 0 black,
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black; */
       }
 
       #myVideo {
@@ -71,24 +86,30 @@
       }
 
       form{
-        position: fixed;
-        top: 25%;
-        left: 25%;
+        /* position: fixed;
+        top: 5%;
+        left: 0%; */
         /* background: rgba(0, 0, 0, 0.5); */
         color: #f1f1f1;
-        width: 50%;
-        padding: 20px;
+        width: 30%;
+        /* padding: 20px; */
+        margin-top: 2%;
+        margin-left: 2%;
+        /* outline: 1px solid red; */
+        background-color: rgba(88,88,88, .5);
+        border-radius: 10px;
+        padding: 1% 0px;
       }
 
       .btn{
         width: 25%;
         margin: auto;
-        background-color:	rgba(139,69,19,.85);
+        background-color:	rgba(19,46,35,.85);
         border: none;
       }
 
       .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
-        background-color:	rgb(139,69,19)
+        background-color:	rgb(19,46,35)
       }
 
     </style>
@@ -100,9 +121,9 @@
 
 
     
-    <video loop muted autoplay id="myVideo">
+    <!-- <video loop muted autoplay id="myVideo">
         <source src="/static/login/img/iceland_cave.mp4" type="video/mp4">
-    </video>
+    </video> -->
   
 
     <form class="form-signin" action="/processIndex" method="POST">
@@ -110,7 +131,7 @@
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
       <p>Username:</p>
-      <input type="text" name="inputName" class="form-control" placeholder="ex. John Doe" required autofocus><br>
+      <input type="text" name="inputName" class="form-control" placeholder="ex. John Doe" required autofocus autocomplete="off"><br>
 
       <div class="form-group select">
         <p>Status:</p>
@@ -121,8 +142,8 @@
         </select>
       </div>
       
-      <p>Password:</p>
-      <input type="password" name="password" class="form-control" placeholder="required only for admin access">
+      <!-- <p>Password:</p>
+      <input type="password" name="password" class="form-control" placeholder="required only for admin access"> -->
 
 
 

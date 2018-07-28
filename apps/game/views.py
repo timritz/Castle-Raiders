@@ -12,6 +12,7 @@ def index(request,name):
         'orderedPlayers': request.session['orderedPlayerDict'],
         'name': name,
         'map': request.session['map']
+        'activePlayer': request.session['orderedPlayerDict']['activePlayer']
     }
     return render(request, 'game/temp_main.html', context)
 
@@ -40,8 +41,11 @@ def fight(request):
         print(request.session['orderedPlayerDict'][defenderName]['health'])
         request.session.modified = True
         playerDict = collections.OrderedDict(sorted(request.session['orderedPlayerDict'].items(), key=lambda t: t[1]['priority']))
+        mapArray = request.session['map']
+        worldStateDict['playerDict'] = playerDict
+        worldStateDict['mapArray'] = request.session['map']
         # orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
-        return HttpResponse(json.dumps(playerDict), content_type = 'application/javascript; charset=utf8')
+        return HttpResponse(json.dumps(worldStateDict), content_type = 'application/javascript; charset=utf8')
 
 def game_state(request):
     gameStateDict = {}
@@ -49,20 +53,15 @@ def game_state(request):
     playerDict = collections.OrderedDict(sorted(request.session['orderedPlayerDict'].items(), key=lambda t: t[1]['priority']))
     gameStateDict['updatedMap'] = updatedMap
     gameStateDict['updatedPlayerDict'] = playerDict
-    gameStateDict['playerTurn'] = request.session['playerTurn']
+    gameStateDict['activePlayer'] = request.session['activePlayer']
     # orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
     return HttpResponse(json.dumps(gameStateDict), content_type = 'application/javascript; charset=utf8')
 
-    # Will take in the player who is fighting, the character who is being fought
-    # Will take in their attack, defense including cards and run the initial numbers
-    # Will use those numbers to calculate the results, then update orderedDict and return the result
-
 
 def activePlayer(request):
-    while(request.session['playerCount'] > 1):
+    while(request.session['won'] == False):
         for player in request.session['orderedPlayerDict']:
             yield player
-
 
 
 def prep_game(request, name):
@@ -76,11 +75,7 @@ def prep_game(request, name):
 
                 newPlayer.save()
 
-
-                print('final newPlayer', newPlayer.__dict__)
-
         playerList = Player.objects.all()
-
         characterTypeReference = {
             'Knight': Character_Attributes_OOP.Knight(),
             'Mage': Character_Attributes_OOP.Mage(),
@@ -90,23 +85,15 @@ def prep_game(request, name):
 
         request.session.clear()
 
-
         submittedPlayerList = []
-
         request.session['stats'] = {}
 
         for player in playerList:
             request.session['stats'][str(player.name)] = characterTypeReference[player.characterType].__dict__
             submittedPlayerList.append(player.name)
 
-        for player in submittedPlayerList:
-            print('player:', player)
-            print('session', request.session['stats'][player])
-
-
     map = loadMap('entrance')
-
-
+    request.session['won'] == False
     first_time = True
 
     if(first_time):
@@ -116,39 +103,23 @@ def prep_game(request, name):
         positions = {
             '1': [0, 0],
             '2': [1, 0],
-            #'2': [len(map[0]) - 1, 0],
+            # '2': [len(map[0]) - 1, 0],
             '3': [0, len(map) - 1],
             '4': [len(map[0]) - 1, len(map) - 1]
         }
 
-        print('all positions', positions)
         counter = 1
         for player, value in request.session['stats'].items():
-            print('position', positions[str(counter)])
-            print(player, value)
-
             value['position']['x'] = positions[str(counter)][0]
             value['position']['y'] = positions[str(counter)][1]
 
             map[value['position']['y']][value['position']['x']][1] = player
-
-            print(counter, value['position'])
             counter += 1
 
         print(request.session['stats'].items())
         orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
+        request.session['activePlayer'] = next(iter(orderedPlayerDict.items()))
 
-        # for player, value in request.session['stats'].items():
-        #     print(player)
-        #     print(value)
-        #
-        #     orderedPlayerDict[player] = value
-
-        for player in orderedPlayerDict:
-            print(player, orderedPlayerDict[player]['name'])
-
-
-    request.session['map'] = map
     request.session['orderedPlayerDict'] = orderedPlayerDict
     request.session['map'] = map
 
@@ -192,3 +163,45 @@ def how_to_play(request):
 
 def character_info(request):
     return render(request, 'game/character_info.html')
+
+def processMove(request, name):
+
+    if(request.method=="POST"):
+
+        print("incoming Form,", request.POST)
+        newMap = request.POST['formMap'].split(',')
+
+        i = 0
+        new_list = []
+        while i < len(newMap):
+            new_list.append(newMap[i:i + 2])
+            i += 2
+
+        i = 0
+        updated_map = []
+        while i < len(new_list):
+            updated_map.append(new_list[i:i + 10])
+            i += 10
+
+        request.session['orderedPlayerDict'][name]['position']['x'] = int(request.POST['playersInfoX'])
+        request.session['orderedPlayerDict'][name]['position']['y'] = int(request.POST['playersInfoY'])
+
+        print(request.session['orderedPlayerDict'][name]['position'])
+
+        request.session['map'] = updated_map
+        return HttpResponse(json.dumps(request.session['map']), content_type = 'application/javascript; charset=utf8')
+
+
+def processRest(request, name):
+
+    if(request.method == "POST"):
+        print(request.POST)
+        request.session['orderedPlayerDict'][request.POST['player']]['health'] += 1
+        request.session.modified = True
+        return HttpResponse(json.dumps(request.session['orderedPlayerDict']), content_type = 'application/javascript; charset=utf8')
+
+def endTurn(request, playerName):
+    if(request.method == "POST"):
+        request.session['activePlayer'] = next(iter(orderedPlayerDict.items()))
+        response = 'Turn Ended'
+        return HttpResponse(response)
