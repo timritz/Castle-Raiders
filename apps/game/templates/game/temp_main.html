@@ -330,6 +330,9 @@
             <form id='restForm' action="/game/update/{{name}}/rest" method="POST">
                 {% csrf_token %}
             </form>
+            <form id='moveForm' action="/game/update/{{name}}" method="POST">
+                {% csrf_token %}
+            </form>
         </div>
 
 
@@ -359,7 +362,7 @@
         var updatedMap = {{map | safe}}
         var playerDict = {{ orderedPlayers | safe}}
         var name = "{{name}}"
-        var activePlayer = {{ activePlayer | safe }}
+        var activePlayer = "{{ activePlayer }}"
 
         function displayWorld(incomingMap){
             var output = '';
@@ -539,11 +542,12 @@
                         console.log('performed step')
                     } else{
                         console.log('movements completed')
-                        newMap = incomingMap
+                        var newMap = incomingMap
                         var moveForm = ($('#moveForm').serialize()).slice(20);
+                        map = newMap
                         $.ajax ({
                             method: 'POST',
-                            url: "/game/update/" + name + '/fight',
+                            url: "/game/update/" + name,
                             data: { 'csrfmiddlewaretoken': moveForm, 'formMap': newMap, 'formPlayerInfoX': player['position']['x'], 'formPlayerInfoY': player['position']['y'] },
                             datatype: 'json',
                             success: function(output){
@@ -603,7 +607,7 @@
                 console.log('clicked')
                 $('button.action1').hide();
                 $('#choices1').hide();
-                movePlayer(name)
+                movePlayer(name, updatedMap)
             });
 
             $('button.rest1').click(function(){
@@ -656,7 +660,7 @@
                 console.log('clicked')
                 $('button.action2').hide();
                 $('#choices2').hide();
-                movePlayer(name)
+                movePlayer(name, updatedMap)
             });
 
             $('button.rest2').click(function(){
@@ -699,7 +703,7 @@
         });
 
         function enableMoves(){
-            $('cardHand').show();
+            $('#cardHand').show();
         }
 
         function gameLoop(){
@@ -711,9 +715,9 @@
                 success: function(output){
                     var worldDickies = JSON.parse(output);
                     updatePublicStats(worldDickies['updatedPlayerDict']);
-                    displayMap(worldDickies['updatedMap']);
-                    playerTurn = worldDickies['activePlayer'];
-                    if(name == playerTurn){
+                    displayWorld(worldDickies['updatedMap']);
+                    activePlayer = worldDickies['activePlayer'];
+                    if(name == activePlayer){
                         clearInterval(runGame)
                         enableMoves()
                     };
@@ -723,7 +727,7 @@
                 },
             });
         }
-        var runGame = setInterval(gameLoop, 3000)
+        var runGame = setInterval(gameLoop, 9000)
         
         
     </script>

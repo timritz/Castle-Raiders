@@ -6,13 +6,12 @@ from django.core import serializers
 import json
 
 def index(request,name):
-
     context={
         # 'players': submittedPlayerList,
         'orderedPlayers': request.session['orderedPlayerDict'],
         'name': name,
-        'map': request.session['map']
-        'activePlayer': request.session['orderedPlayerDict']['activePlayer']
+        'map': request.session['map'],
+        'activePlayer': request.session['activePlayer']
     }
     return render(request, 'game/temp_main.html', context)
 
@@ -42,6 +41,7 @@ def fight(request):
         request.session.modified = True
         playerDict = collections.OrderedDict(sorted(request.session['orderedPlayerDict'].items(), key=lambda t: t[1]['priority']))
         mapArray = request.session['map']
+        worldStateDict = {}
         worldStateDict['playerDict'] = playerDict
         worldStateDict['mapArray'] = request.session['map']
         # orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
@@ -85,15 +85,16 @@ def prep_game(request, name):
 
         request.session.clear()
 
-        submittedPlayerList = []
+        # submittedPlayerList = []
         request.session['stats'] = {}
 
         for player in playerList:
             request.session['stats'][str(player.name)] = characterTypeReference[player.characterType].__dict__
-            submittedPlayerList.append(player.name)
+            print(request.session['stats'][str(player.name)])
+            # submittedPlayerList.append(player.name)
 
     map = loadMap('entrance')
-    request.session['won'] == False
+    request.session['won'] = False
     first_time = True
 
     if(first_time):
@@ -118,8 +119,9 @@ def prep_game(request, name):
 
         print(request.session['stats'].items())
         orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
-        request.session['activePlayer'] = next(iter(orderedPlayerDict.items()))
-
+        request.session['activePlayer'] = str(next(iter(orderedPlayerDict.items()))[0])
+        print(request.session['activePlayer'])
+        print('here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     request.session['orderedPlayerDict'] = orderedPlayerDict
     request.session['map'] = map
 
