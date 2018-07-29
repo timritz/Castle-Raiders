@@ -322,9 +322,10 @@
                 <button class='move2 choicesButton'><span>Move</span></button>
                 <button class='rest2 choicesButton'><span>Rest</span></button>
             </div>
-            <form id='endTurnForm' action="/game/endTurn" method="POST">
+            <button class='endTurn btn btn-danger'><span>End Turn</span></button>
+            
+            <form id='endTurnForm' action="/game/end_turn" method="POST">
                 {% csrf_token %}
-                <button id="endTurnButton" name='endTurn'>End Turn</button>
             </form>
 
             <form id='restForm' action="/game/update/{{name}}/rest" method="POST">
@@ -472,7 +473,7 @@
             player = playerDict[currentPlayer]
             
             $(document).keydown(function(e) {
-                while(moved < player.movementSpeed){
+                if(moved < player.movementSpeed){
                     console.log(moved)
                     console.log(player.movementSpeed)
                     
@@ -540,18 +541,19 @@
                     }
                     if(moved < player.movementSpeed){
                         console.log('performed step')
+                        displayWorld(incomingMap)
                     } else{
-                        console.log('movements completed')
-                        var newMap = incomingMap
+                        console.log('movements completed');
+                        displayWorld(incomingMap)
                         var moveForm = ($('#moveForm').serialize()).slice(20);
-                        map = newMap
+                        map = incomingMap;
                         $.ajax ({
                             method: 'POST',
                             url: "/game/update/" + name,
-                            data: { 'csrfmiddlewaretoken': moveForm, 'formMap': newMap, 'formPlayerInfoX': player['position']['x'], 'formPlayerInfoY': player['position']['y'] },
+                            data: { 'csrfmiddlewaretoken': moveForm, 'formMap': JSON.stringify(incomingMap), 'formPlayerInfoX': player['position']['x'], 'formPlayerInfoY': player['position']['y'] },
                             datatype: 'json',
                             success: function(output){
-                                displayWorld(JSON.parse(output))
+                                console.log(output)
                             },
                             error: function(){
                                 console.log('shit broke')
@@ -580,7 +582,7 @@
                 console.log('clicked')
                 $('button.action1').hide();
                 $('#choices1').hide();
-                displayHighlightedWorld(name)
+                displayHighlightedWorld(name, updatedMap)
                 $('div.highlighted').click(function(){
                     var position = $(this).attr('data-position')
                     var card = "1"
@@ -633,7 +635,7 @@
                 console.log('clicked')
                 $('button.action2').hide();
                 $('#choices2').hide();
-                displayHighlightedWorld(name)
+                displayHighlightedWorld(name, updatedMap)
                 $('div.highlighted').click(function(){
                     var position = $(this).attr('data-position')
                     var card = "2"
@@ -681,19 +683,21 @@
                     },
                 });
             });
-            $('#endTurnButton').click(function(){
+            $('button.endTurn').click(function(event){
                 console.log('clicked')
+                event.preventDefault()
+                $('button.endTurn').hide();
                 $('#cardHand').hide();
-                $('#endTurnButton').hide();
                 var endTurnForm = ($('#endTurnForm').serialize()).slice(20);
+                console.log(endTurnForm)
                 $.ajax ({
                     method: 'POST',
-                    url: ("/game/endTurn"),
-                    data: { 'csrfmiddlewaretoken': endTurnForm, 'playerName': name},
+                    url: "/game/end_turn",
+                    data: { 'csrfmiddlewaretoken': endTurnForm },
                     datatype: 'json',
                     success: function(output){
-                        console.log(output)
-                        runGame
+                        console.log(output),
+                        startGameLoop()
                     },
                     error: function(){
                         console.log('shit broke')
@@ -717,8 +721,9 @@
                     updatePublicStats(worldDickies['updatedPlayerDict']);
                     displayWorld(worldDickies['updatedMap']);
                     activePlayer = worldDickies['activePlayer'];
+                    console.log(activePlayer)
                     if(name == activePlayer){
-                        clearInterval(runGame)
+                        stopGameLoop()
                         enableMoves()
                     };
                 },
@@ -728,6 +733,12 @@
             });
         }
         var runGame = setInterval(gameLoop, 9000)
+        function stopGameLoop() {
+            clearInterval(runGame);
+        }
+        function startGameLoop() {
+            runGame = setInterval(gameLoop, 9000);
+}
         
         
     </script>

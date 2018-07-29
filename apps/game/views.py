@@ -6,6 +6,7 @@ from django.core import serializers
 import json
 
 def index(request,name):
+    request.session['activePlayer'] = str(next(activePlayerGen))
     context={
         # 'players': submittedPlayerList,
         'orderedPlayers': request.session['orderedPlayerDict'],
@@ -13,6 +14,7 @@ def index(request,name):
         'map': request.session['map'],
         'activePlayer': request.session['activePlayer']
     }
+    print(request.session['map'])
     return render(request, 'game/temp_main.html', context)
 
 
@@ -40,7 +42,6 @@ def fight(request):
         print(request.session['orderedPlayerDict'][defenderName]['health'])
         request.session.modified = True
         playerDict = collections.OrderedDict(sorted(request.session['orderedPlayerDict'].items(), key=lambda t: t[1]['priority']))
-        mapArray = request.session['map']
         worldStateDict = {}
         worldStateDict['playerDict'] = playerDict
         worldStateDict['mapArray'] = request.session['map']
@@ -57,12 +58,11 @@ def game_state(request):
     # orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
     return HttpResponse(json.dumps(gameStateDict), content_type = 'application/javascript; charset=utf8')
 
-
 def activePlayer(request):
-    while(request.session['won'] == False):
+    while(True):
         for player in request.session['orderedPlayerDict']:
+            print(player)
             yield player
-
 
 def prep_game(request, name):
     if(request.method == "POST"):
@@ -119,10 +119,9 @@ def prep_game(request, name):
 
         print(request.session['stats'].items())
         orderedPlayerDict = collections.OrderedDict(sorted(request.session['stats'].items(), key=lambda t: t[1]['priority']))
-        request.session['activePlayer'] = str(next(iter(orderedPlayerDict.items()))[0])
-        print(request.session['activePlayer'])
-        print('here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     request.session['orderedPlayerDict'] = orderedPlayerDict
+    global activePlayerGen
+    activePlayerGen = activePlayer(request)
     request.session['map'] = map
 
     return redirect ('/game/'+ name)
@@ -167,43 +166,28 @@ def character_info(request):
     return render(request, 'game/character_info.html')
 
 def processMove(request, name):
-
     if(request.method=="POST"):
-
-        print("incoming Form,", request.POST)
-        newMap = request.POST['formMap'].split(',')
-
-        i = 0
-        new_list = []
-        while i < len(newMap):
-            new_list.append(newMap[i:i + 2])
-            i += 2
-
-        i = 0
-        updated_map = []
-        while i < len(new_list):
-            updated_map.append(new_list[i:i + 10])
-            i += 10
-
-        request.session['orderedPlayerDict'][name]['position']['x'] = int(request.POST['playersInfoX'])
-        request.session['orderedPlayerDict'][name]['position']['y'] = int(request.POST['playersInfoY'])
-
-        print(request.session['orderedPlayerDict'][name]['position'])
-
-        request.session['map'] = updated_map
-        return HttpResponse(json.dumps(request.session['map']), content_type = 'application/javascript; charset=utf8')
+        newMap = json.loads(request.POST['formMap'])
+        request.session['orderedPlayerDict'][name]['position']['x'] = int(request.POST['formPlayerInfoX'])
+        request.session['orderedPlayerDict'][name]['position']['y'] = int(request.POST['formPlayerInfoY'])
+        request.session['map'] = newMap
+        response = 'Niceeee'
+        return HttpResponse(response)
 
 
 def processRest(request, name):
 
     if(request.method == "POST"):
         print(request.POST)
-        request.session['orderedPlayerDict'][request.POST['player']]['health'] += 1
+        request.session['orderedPlayerDict'][name]['health'] += 1
         request.session.modified = True
         return HttpResponse(json.dumps(request.session['orderedPlayerDict']), content_type = 'application/javascript; charset=utf8')
 
-def endTurn(request, playerName):
+def end_turn(request):
     if(request.method == "POST"):
-        request.session['activePlayer'] = next(iter(orderedPlayerDict.items()))
+        print("I'm here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        request.session['activePlayer'] = str(next(activePlayerGen))
+        print(request.session['activePlayer'])
         response = 'Turn Ended'
         return HttpResponse(response)
+    

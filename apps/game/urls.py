@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^/character_info$', views.character_info),
     url(r'^/update/(?P<name>[a-zA-Z]+)$', views.processMove),
     url(r'^/update/(?P<name>[a-zA-Z]+)/rest', views.processRest),
-    url(r'^/endTurn$', views.endTurn)
+    url(r'^/end_turn$', views.end_turn)
 ]
