@@ -130,8 +130,8 @@ def prep_game(request, name):
 
         positions = {
             '1': [0, 0],
-            '2': [1, 0],
-            # '2': [len(map[0]) - 1, 0],
+            # '2': [1, 0],
+            '2': [len(map[0]) - 1, 0],
             '3': [0, len(map) - 1],
             '4': [len(map[0]) - 1, len(map) - 1]
         }
@@ -303,3 +303,18 @@ def processRest(request, name):
 
 
     return redirect('/game/'+name)
+
+def ajax(request):
+    print('hello world')
+    print(request.method)
+
+    if(request.method == "POST"):
+        print()
+        print("got to ajax")
+        print()
+
+
+        print(request.POST)
+        print()
+        print('leaving ajax')
+    return HttpResponse(request.POST)

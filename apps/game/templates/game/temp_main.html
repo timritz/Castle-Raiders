@@ -18,6 +18,8 @@
     <link href="starter-template.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=MedievalSharp" rel="stylesheet">
 
+    <link href="../../static/game/css/temp_main.css" rel="stylesheet">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
     <script
@@ -223,6 +225,7 @@
   </head>
 
   <body>
+      <audio src='/static/login/mp3/bensound-epic.mp3'></audio>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand">Link List</a>
 
@@ -318,7 +321,7 @@
                 <button class='move2 choicesButton'><span>Move</span></button>
                 <button class='rest2 choicesButton'><span>Rest</span></button>
             </div>
-            <form action="/game/update/{{name}}" method="POST">
+            <form id='formMove' action="/game/update/{{name}}" method="POST">
                 {% csrf_token %}
                 <input id="formMap" type='hidden' name='map' value="">
 
@@ -348,6 +351,12 @@
                 <input id ="formCardUsed" type='hidden' name='cardUsed' value=""> -->
                 <input id="submitButton" type="submit" name= 'update' value="Update Rest">
             </form>
+
+            <form id='ajaxForm' action="update/ajaxTest/1" method="POST">
+                {% csrf_token %}
+                <input id="ajaxTest" type=' text' name='test' value="test" >
+                <input id="submitButton" type="submit" name= 'update' value="Update Rest">
+            </form>
         </div>
 
 
@@ -360,11 +369,11 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
     <script src="../../assets/js/vendor/popper.min.js"></script>
     <script src="../../dist/js/bootstrap.min.js"></script>
-
 
     <script>
 
@@ -374,7 +383,7 @@
                 e.preventDefault();
             }
         }, false);
-        
+
         var map = {{map | safe}}
 
         var characters = {{orderedPlayers | safe}}
@@ -492,10 +501,10 @@
         function movePlayer(currentPlayer){
             var moved = 0
 
-            console.log(currentPlayer)
+            console.log('current player in movePlayer', currentPlayer)
             player = characters[currentPlayer]
             
-            // console.log(player)
+            console.log(player)
             console.log('start moving')
             $(document).keydown(function(e) {
                 // console.log(player)
@@ -589,6 +598,20 @@
                     $('#formMap').attr('value', map)
                     $('#formPlayerInfoX').attr('value', player['position']['x'])
                     $('#formPlayerInfoY').attr('value', player['position']['y'])
+
+                    // $.ajax({
+                    //     type: "POST",
+                    //     url: "/game/update/{{name}}",
+                    //     // data: $('#ajaxForm').serialize(),
+                    //     data: $('#formMove').serialize(),
+                    //     success: function(resp){
+                    //         // console.log(resp)
+                    //         console.log('successful ajax return')
+                    //     },
+                    //     error: function(){
+                    //         console.log('errors')
+                    //     }
+                    // })
                 }
                 displayWorld()
             });
@@ -636,9 +659,26 @@
                 console.log('clicked')
                 $('button.action1').hide();
                 $('#choices1').hide();
+                console.log('name before movePlayer', name)
                 movePlayer(name)
                 // $('#formMap').attr('value', map)
                 console.log(map)
+                
+               
+                // $.ajax({
+                //     type: "POST",
+                //     url: "/game/update/ajaxTest/1",
+                //     // data: $('#ajaxForm').serialize(),
+                //     data: $('#formMove').serialize(),
+                //     success: function(resp){
+                //         console.log(resp)
+                //         console.log('successful ajax return')
+                //     },
+                //     error: function(){
+                //         console.log('errors')
+                //     }
+                // })
+
 
                 // $.post(url('/game/processMove'),{'map': map}, )
 
@@ -689,6 +729,26 @@
                 $('#choices2').hide();
 
                 $('#formPlayer').attr('value', name)
+
+            });
+
+            $('#ajaxForm').click(function(){
+                console.log('clicked')
+                console.log($(this).serialize())
+                $.ajax({
+                    type: "POST",
+                    url: "/game/update/ajaxTest/1",
+                    data: $(this).serialize(),
+                    success: function(resp){
+                        console.log(resp)
+                        console.log('successful ajax return')
+                    },
+                    error: function(){
+                        console.log('errors')
+                    }
+                    
+
+                })
 
             });
 

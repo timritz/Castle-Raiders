@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^/character_info$', views.character_info),
     url(r'^/update/(?P<name>[a-zA-Z]+)$', views.processMove),
     url(r'^/update/(?P<name>[a-zA-Z]+)/fight$', views.processFight),
-    url(r'^/update/(?P<name>[a-zA-Z]+)/rest', views.processRest)
+    url(r'^/update/(?P<name>[a-zA-Z]+)/rest', views.processRest),
+    url(r'^/update/ajaxTest/1$', views.ajax)
 ]

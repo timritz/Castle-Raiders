@@ -18,7 +18,9 @@
     <!-- Custom styles for this template -->
     <link href="jumbotron.css" rel="stylesheet">
 
-    <script>
+    <link href="../../static/login/css/setup.css" rel="stylesheet">
+
+    <!-- <script>
 
         $(document).ready(function(){
             $(':radio').click(function(){
@@ -34,131 +36,11 @@
             });
 
         });
-    </script>
-
-    <style>
-        *{
-            /* outline: 1px dotted red; */
-            font-family: MedievalSharp;
-        }
-        .jumbotron{
-            display: inline-block;
-            /* min-width: 25%; */
-            padding: 3% 1%;
-            overflow:inherit;
-            background-color: rgba(88,88,88, .5);
-            color: white;
-        }
-        .teamDisplay{
-            display: inline-block;
-
-        }
-        .main{
-            display: inline-block;
-            /* width: 75%; */
-            vertical-align: top;
-            background-color: rgba(88,88,88, .5);
-            padding: 1% 0px;
-            margin: 0px 5%;
-            border-radius: 5px;
-            margin-bottom: 19%;
-            
-        }
-        .col-md-4{
-            display: block;
-            max-width: 100%;
-        }
-        .display-3{
-            width: 100%;
-            text-align: center;
-        }
-        body{
-            padding: 2%;
-            background-image: url("{% static 'login/img/forest1.jpg' %}");
-            background-repeat:no-repeat;
-            background-size:cover;
-            margin: 0px 0px;
-            width: 100%;
-            height: auto;
-            outline: 1px solid red;
-            overflow: hidden;
-        }
-        .character_select{
-            color: whitesmoke;
-            text-shadow: -1px -1px  black,
-            -1px 1px  black,
-            1px -1px  black,
-            1px 1px  black;
-
-        }
-
-        .col-sm-10 {
-            -ms-flex: 0 0 83.333333%;
-            flex: 0 0 83.333333%;
-            max-width: none;
-            padding: 0px 0px;
-        }
-
-
-        .teamDisplay input{
-            background-color: inherit;
-            border: none;
-
-        }
-
-        .startButton{
-            background-color: rgb(19,46,35)
-        }
-
-        .startButton{
-            color: white;
-            background-color: rgb(19,46,35);
-            width: 50%;
-            text-align: center;
-            border-color: black;
-            border-radius: 2px;
-        }
-
-        .form-check-input{
-            position:fixed;
-            opacity:0
-        }
-
-        label img{
-            display: inline-block;
-            margin-right: 1%;
-            width: 7%
-        }
-
-        label .spacer{
-            display: inline-block;
-            vertical-align: top;
-            width: 90%;
-        }
-
-        .updateButton{
-            width: 10%;
-            margin-left: 10%;
-            background-color: rgb(19,46,35);
-            color: white;
-            text-align: center;
-            border-color: black;
-            border-radius: 2px;
-        }
-        input{
-            color: white;
-        }
-        .bordered{
-            border: 2px solid rgb(2, 2, 107);
-        }
-        .selected{
-            border: 2px solid rgb(121, 16, 21);
-        }
-    </style>
-
+    </script> -->
   </head>
 
   <body>
+    <audio src='/static/login/mp3/bensound-epic.mp3'></audio>
     <main role="main">   
 
         <form class='teamDisplay' action="/game/prep/{{name}}" method="post">
@@ -175,7 +57,7 @@
                                 <!-- {{player}} -->
 
                                 <li style='font-weight: bold'>{{player}}</li>
-                                <ul><li><input type='text'  name="{{player}}" value = {{value.character}} readonly></li></ul>
+                                <ul><li><input id ="{{player}}Character" type='text'  name="{{player}}" value = {{value.character}} readonly></li></ul>
                                 <!-- <input type=hidden name={{player}}info value={{value}}> -->
                             </ul>
 
@@ -253,68 +135,6 @@
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
     <script src="../../assets/js/vendor/popper.min.js"></script>
     <script src="../../dist/js/bootstrap.min.js"></script>
-
-    <script>
-        $(document).ready(function(){
-            $('label.form-check-label.knightRadio').hover(function(){
-                console.log('hovered')
-                $('img.knightPic').addClass('bordered');
-                },function(){
-                    $('img.knightPic').removeClass('bordered');
-                }
-            );
-
-            $('label.form-check-label.mageRadio').hover(function(){
-                console.log('hovered')
-                $('img.magePic').addClass('bordered');
-                },function(){
-                    $('img.magePic').removeClass('bordered');
-                }
-            );
-
-            $('label.form-check-label.rogueRadio').hover(function(){
-                console.log('hovered')
-                $('img.roguePic').addClass('bordered');
-                },function(){
-                    $('img.roguePic').removeClass('bordered');
-                }
-            );
-
-            $('label.form-check-label.bardRadio').hover(function(){
-                console.log('hovered')
-                $('img.bardPic').addClass('bordered');
-                },function(){
-                    $('img.bardPic').removeClass('bordered');
-                }
-            );
-
-
-            $('label.form-check-label.knightRadio').click(function(){
-                console.log('clicked')
-                $('img').removeClass('selected')
-                $('img.knightPic').addClass('selected')
-            });
-
-            $('label.form-check-label.mageRadio').click(function(){
-                console.log('clicked')
-                $('img').removeClass('selected')
-                $('img.magePic').addClass('selected')
-            });
-
-            $('label.form-check-label.rogueRadio').click(function(){
-                console.log('clicked')
-                $('img').removeClass('selected')
-                $('img.roguePic').addClass('selected')
-            });
-
-            $('label.form-check-label.bardRadio').click(function(){
-                console.log('clicked')
-                $('img').removeClass('selected')
-                $('img.bardPic').addClass('selected')
-            });
-        });
-    
-    </script>
-
+    <script src="../../static/login/js/setup.js"></script>
   </body>
 </html>
