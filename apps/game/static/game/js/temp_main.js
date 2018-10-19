@@ -5,12 +5,12 @@ window.addEventListener("keydown", function(e) {
     }
 }, false);
 
-var map = {{map | safe}}
+// var map = {{map | safe}}
 
-var characters = {{orderedPlayers | safe}}
-var totalCharacters = 0;
+// var characters = {{orderedPlayers | safe}}
+// var totalCharacters = 0;
 
-var name = "{{name}}"
+// var name = "{{name}}"
 var myVar = setInterval(loadMap, 3000);
 
 function loadMap() {
